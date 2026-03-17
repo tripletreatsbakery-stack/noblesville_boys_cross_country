@@ -14,11 +14,17 @@
 
 <div id="athleteData" style="margin-top:20px;"></div>
 
-<script>
-const url = "https://ezohjtwkamhxztjzqbrh.supabase.co/rest/v1/v_athlete_physiology";
+<!-- Load config FIRST -->
+<script src="config.js"></script>
 
-// 🔴 REQUIRED: your anon key
-const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6b2hqdHdrYW1oeHp0anpxYnJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0OTUwODEsImV4cCI6MjA3MDA3MTA4MX0.3-BQGahVCYWNt96g7qXVTR4AbttCWmXUEZrNPdtqdKo";
+<script>
+if (!window.CONFIG) {
+    document.getElementById("status").innerText = "CONFIG not loaded (check config.js)";
+    throw new Error("CONFIG not loaded");
+}
+
+const url = CONFIG.SUPABASE_URL + "/rest/v1/v_athlete_physiology";
+const apiKey = CONFIG.SUPABASE_KEY;
 
 let allData = [];
 
@@ -51,7 +57,7 @@ fetch(url, {
 
     document.getElementById("status").innerText = "Loaded " + data.length + " athletes";
 
-    // sort alphabetically
+    // sort safely
     data.sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
 
     allData = data;
