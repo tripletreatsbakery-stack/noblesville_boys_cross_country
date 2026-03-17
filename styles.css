@@ -1,28 +1,65 @@
 body {
     font-family: Arial, sans-serif;
-    background: #0b1f3a;
-    color: white;
+    background: #000000;
+    color: #f5f5f5;
     margin: 0;
 }
 
+/* Header */
 header {
-    background: #142f5c;
+    background: #000000;
+    color: #d4af37; /* gold */
     padding: 20px;
     text-align: center;
+    border-bottom: 2px solid #d4af37;
 }
 
+/* Main layout */
 main {
     padding: 20px;
 }
 
+/* Dropdown */
 select {
     padding: 8px;
     font-size: 16px;
+    background: #111;
+    color: #f5f5f5;
+    border: 1px solid #d4af37;
+    border-radius: 4px;
 }
 
+/* Status text */
+#status {
+    margin-top: 10px;
+    color: #d4af37;
+}
+
+/* Athlete card */
 #athleteData {
     margin-top: 20px;
-    background: #1c3d73;
+    background: #111;
     padding: 15px;
     border-radius: 8px;
+    border: 1px solid #d4af37;
+}
+
+/* Athlete name */
+#athleteData h2 {
+    color: #d4af37;
+    margin-top: 0;
+}
+
+/* Labels */
+#athleteData p {
+    margin: 6px 0;
+}
+
+/* Optional: hover polish */
+select:hover {
+    border-color: #ffd700;
+}
+
+#athleteData:hover {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
