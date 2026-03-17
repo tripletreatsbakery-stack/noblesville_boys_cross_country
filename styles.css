@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #0b1f3a;
+    color: white;
+    margin: 0;
+}
+
+header {
+    background: #142f5c;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+#athleteData {
+    margin-top: 20px;
+    background: #1c3d73;
+    padding: 15px;
+    border-radius: 8px;
+}
