@@ -158,3 +158,38 @@ select {
         grid-template-columns: 1fr;
     }
 }
+/* Spectrum gauge */
+.spectrum {
+    margin-top: 15px;
+}
+
+.labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.bar {
+    position: relative;
+    height: 6px;
+    background: linear-gradient(
+        to right,
+        #7f1d1d,
+        #d4af37,
+        #1d4ed8
+    );
+    border-radius: 4px;
+}
+
+.marker {
+    position: absolute;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid #000;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
