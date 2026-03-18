@@ -3,14 +3,14 @@ window.addEventListener("load", function () {
     const base = CONFIG.SUPABASE_URL + "/rest/v1/";
     const apiKey = CONFIG.SUPABASE_KEY;
 
-    let allData = [];
-    let courseData = [];
-    let yearData = [];
-
     const headers = {
         "apikey": apiKey,
         "Authorization": "Bearer " + apiKey
     };
+
+    let allData = [];
+    let courseData = [];
+    let yearData = [];
 
     Promise.all([
         fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
@@ -135,19 +135,47 @@ window.addEventListener("load", function () {
         `;
     }
 
-    function getLabel(type) {
-        if (type === "speed") return "Speed Builder";
-        if (type === "endurance-leaning") return "Endurance Strength";
-        if (type === "balanced") return "Balanced Runner";
-        return "Developing Runner";
+    function getLabelFromGroup(group) {
+        if (!group) return "Balanced";
+
+        if (group.includes("speed")) return "Speed";
+        if (group.includes("aerobic") || group.includes("distance")) return "Endurance";
+
+        return "Balanced";
     }
 
-    function getFocus(group) {
-        if (group === "speed_development")
-            return "Build endurance to improve 5K strength";
-        if (group === "aerobic_development")
-            return "Increase aerobic capacity for stronger finishes";
-        return "-";
+    // ---------- GAUGE ----------
+
+    function getSpectrumPosition(val) {
+        if (val == null) return 50;
+
+        const min = 0.85;
+        const max = 1.15;
+
+        let pct = (val - min) / (max - min);
+        pct = Math.max(0, Math.min(1, pct));
+
+        return Math.round(pct * 100);
+    }
+
+    function buildGauge(a) {
+        const pos = getSpectrumPosition(a.ser_multi);
+
+        return `
+            <div class="spectrum">
+
+                <div class="labels">
+                    <span>SPEED</span>
+                    <span>BALANCED</span>
+                    <span>ENDURANCE</span>
+                </div>
+
+                <div class="bar">
+                    <div class="marker" style="left:${pos}%"></div>
+                </div>
+
+            </div>
+        `;
     }
 
     // ---------- render ----------
@@ -166,7 +194,8 @@ window.addEventListener("load", function () {
 
                 <div class="identity">
                     <div class="you-are">YOU ARE</div>
-                    <div class="type">${getLabel(a.runner_type_multi)}</div>
+                    <div class="type">${getLabelFromGroup(a.training_group)}</div>
+                    ${buildGauge(a)}
                 </div>
 
                 <div class="section prs">
@@ -182,7 +211,13 @@ window.addEventListener("load", function () {
 
                 <div class="section focus">
                     <h3>FOCUS</h3>
-                    <p>${getFocus(a.training_group)}</p>
+                    <p>${
+                        a.training_group === "speed_development"
+                            ? "Build endurance to improve 5K strength"
+                            : a.training_group === "aerobic_development"
+                            ? "Increase aerobic capacity for stronger finishes"
+                            : "-"
+                    }</p>
                 </div>
 
             </div>
