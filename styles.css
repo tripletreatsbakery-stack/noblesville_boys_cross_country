@@ -22,25 +22,19 @@ header {
 main {
     padding: 20px;
     max-width: 900px;
-    margin: 0 auto;
+    margin: auto;
 }
 
 select {
     padding: 8px;
-    font-size: 16px;
     background: var(--panel);
     color: var(--text);
     border: 1px solid var(--gold);
-    border-radius: 4px;
 }
 
 #status {
-    margin-top: 10px;
     color: var(--gold);
-}
-
-#athleteData {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .card {
@@ -48,8 +42,22 @@ select {
     padding: 20px;
     border-radius: 10px;
     background: var(--panel);
-    max-width: 700px;
-    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.identity {
+    margin: 10px 0 20px;
+}
+
+.you-are {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.type {
+    font-size: 22px;
+    color: var(--gold);
+    font-weight: bold;
 }
 
 .section {
@@ -59,107 +67,94 @@ select {
 .section h3 {
     color: var(--gold);
     border-bottom: 1px solid var(--gold);
-    padding-bottom: 6px;
+    padding-bottom: 5px;
 }
 
-.section.prs {
-    border-top: 2px solid var(--gold);
-    padding-top: 15px;
+.pr-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pr-grid label {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.pr-grid span {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .section.focus {
-    border-top: 2px solid var(--gold);
     background: rgba(212,175,55,0.05);
     padding: 15px;
     border-radius: 6px;
 }
 
-/* Identity */
-.identity {
-    margin-top: 10px;
-}
-
-.you-are {
-    font-size: 12px;
-    color: #aaa;
-}
-
-.type {
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--gold);
-}
-
-.confidence {
-    font-size: 12px;
-    color: #888;
-}
-
-/* PR grid */
-.pr-grid {
+/* Split layout */
+.course-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 12px;
-    text-align: center;
-}
-
-.pr-grid label {
-    font-size: 12px;
-    color: #aaa;
-}
-
-.pr-grid span {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Gauge */
-.gauge {
-    margin-top: 10px;
-}
-
-.gauge-bar {
-    width: 100%;
-    height: 10px;
-    background: #333;
-    border-radius: 5px;
-}
-
-.gauge-fill {
-    height: 100%;
-    background: linear-gradient(to right, #d4af37, #ffd700);
-}
-
-.gauge-label {
-    font-size: 12px;
-    color: #aaa;
-    margin-top: 4px;
-}
-/* Courses section */
-.card.courses {
-    margin-top: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
 .course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
+    gap: 10px;
 }
 
 .course-item {
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.course-item label {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.course-item span {
+    font-weight: bold;
+}
+
+.year-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.year-item {
     background: rgba(255,255,255,0.03);
     padding: 10px;
     border-radius: 6px;
     text-align: center;
 }
 
-.course-item label {
-    display: block;
+.year-item label {
     font-size: 11px;
     color: #aaa;
 }
 
-.course-item span {
-    font-size: 16px;
+.year-item span {
     font-weight: bold;
+}
+
+.improvement {
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    text-align: center;
+    color: var(--gold);
+    font-weight: bold;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .course-layout {
+        grid-template-columns: 1fr;
+    }
 }
