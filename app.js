@@ -101,46 +101,55 @@ window.addEventListener("load", function () {
     }
 
     // ---------- Render ----------
+function showAthlete(index) {
+    const a = allData[index];
+    if (!a) return;
 
-    function showAthlete(index) {
-        const a = allData[index];
-        if (!a) return;
+    const container = document.getElementById("athleteData");
 
-        const container = document.getElementById("athleteData");
+    container.innerHTML = `
+        <div class="card">
 
-        container.innerHTML = `
-            <div class="card">
+            <h2>${a.full_name || "Unknown"}</h2>
 
-                <h2>${a.full_name || "Unknown"}</h2>
-
-                <div class="section">
-                    <h3>PRs</h3>
-                    <div class="pr-grid">
-                        <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
-                        <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
-                        <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
-                        <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
-                        <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>Training Profile</h3>
-                    <p><b>Type:</b> ${a.runner_type_multi || "-"}</p>
-                    <p><b>SER Multi:</b> ${formatNumber(a.ser_multi)}</p>
-                    <p><b>Speed Reserve:</b> ${formatSeconds(a.speed_reserve_seconds)}</p>
-                    <p><b>Ratio:</b> ${formatNumber(a.speed_reserve_ratio)}</p>
-                    <p><b>Confidence:</b> ${a.confidence_level || "-"}</p>
-                    <p><b>Group:</b> ${a.training_group || "-"}</p>
-                </div>
-
-                <div class="section">
-                    <h3>Training Focus</h3>
-                    <p>${getFocus(a.training_group)}</p>
-                </div>
-
+            <div class="badges">
+                <span class="badge type-${a.runner_type_multi || "unknown"}">
+                    ${a.runner_type_multi || "unknown"}
+                </span>
+                <span class="badge confidence-${a.confidence_level || "none"}">
+                    ${a.confidence_level || "none"}
+                </span>
             </div>
-        `;
-    }
+
+            <!-- PR SECTION -->
+            <div class="section prs">
+                <h3>PRs</h3>
+                <div class="pr-grid">
+                    <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
+                    <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
+                    <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
+                    <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
+                    <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
+                </div>
+            </div>
+
+            <!-- TRAINING PROFILE -->
+            <div class="section profile">
+                <h3>Training Profile</h3>
+                <p><b>SER Multi:</b> ${formatNumber(a.ser_multi)}</p>
+                <p><b>Speed Reserve:</b> ${formatSeconds(a.speed_reserve_seconds)}</p>
+                <p><b>Ratio:</b> ${formatNumber(a.speed_reserve_ratio)}</p>
+                <p><b>Group:</b> ${a.training_group || "-"}</p>
+            </div>
+
+            <!-- TRAINING FOCUS -->
+            <div class="section focus">
+                <h3>Training Focus</h3>
+                <p>${getFocus(a.training_group)}</p>
+            </div>
+
+        </div>
+    `;
+}
 
 });
