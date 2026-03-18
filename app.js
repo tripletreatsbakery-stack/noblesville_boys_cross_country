@@ -3,7 +3,6 @@ window.addEventListener("load", function () {
 
     if (!window.CONFIG) {
         document.getElementById("status").innerText = "CONFIG not loaded";
-        console.error("CONFIG missing");
         return;
     }
 
@@ -20,14 +19,10 @@ window.addEventListener("load", function () {
         }
     })
     .then(res => {
-        if (!res.ok) {
-            throw new Error("HTTP error " + res.status);
-        }
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
     })
     .then(data => {
-
-        console.log("DATA:", data);
 
         if (!data || data.length === 0) {
             document.getElementById("status").innerText = "No data returned";
@@ -37,14 +32,10 @@ window.addEventListener("load", function () {
         document.getElementById("status").innerText =
             "Loaded " + data.length + " athletes";
 
-        // sort alphabetically
         data.sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
-
         allData = data;
 
         const dropdown = document.getElementById("athleteDropdown");
-
-        // prevent duplicates on reload
         dropdown.innerHTML = "";
 
         data.forEach((athlete, index) => {
@@ -63,93 +54,105 @@ window.addEventListener("load", function () {
     })
     .catch(err => {
         document.getElementById("status").innerText = "Error: " + err.message;
-        console.error(err);
     });
 
     // ---------- Helpers ----------
 
     function formatTime(seconds) {
-        if (seconds === null || seconds === undefined) return "-";
+        if (seconds == null) return "-";
         const min = Math.floor(seconds / 60);
         const sec = (seconds % 60).toFixed(2).padStart(5, "0");
         return `${min}:${sec}`;
     }
 
     function formatNumber(val) {
-        if (val === null || val === undefined) return "-";
+        if (val == null) return "-";
         return Number(val).toFixed(2);
     }
 
-    function formatSeconds(val) {
-        if (val === null || val === undefined) return "-";
-        return Number(val).toFixed(1) + "s";
+    function getAthleteLabel(type) {
+        switch (type) {
+            case "speed": return "Speed Builder";
+            case "endurance-leaning": return "Endurance Strength";
+            case "balanced": return "Balanced Runner";
+            default: return "Developing Runner";
+        }
+    }
+
+    function getConfidenceLabel(conf) {
+        if (conf === "high") return "High Confidence";
+        if (conf === "low") return "Early Data";
+        return "";
     }
 
     function getFocus(group) {
-        if (!group) return "-";
-
         switch (group) {
-            case "aerobic_development":
-                return "Build aerobic strength (tempo, long intervals)";
             case "speed_development":
-                return "Develop speed + turnover (strides, short reps)";
+                return "Build endurance to improve 5K strength (tempo + longer intervals)";
+            case "aerobic_development":
+                return "Increase aerobic capacity for stronger 5K finishes";
             case "distance":
-                return "Race endurance (threshold + sustained efforts)";
+                return "Maintain endurance and sharpen race pace for 5K";
             default:
                 return "-";
         }
     }
 
+    function getProgress(val) {
+        if (val == null) return 0;
+        const min = -0.2;
+        const max = 0.2;
+        let pct = (val - min) / (max - min);
+        pct = Math.max(0, Math.min(1, pct));
+        return Math.round(pct * 100);
+    }
+
     // ---------- Render ----------
-function showAthlete(index) {
-    const a = allData[index];
-    if (!a) return;
 
-    const container = document.getElementById("athleteData");
+    function showAthlete(index) {
+        const a = allData[index];
+        if (!a) return;
 
-    container.innerHTML = `
-        <div class="card">
+        const progress = getProgress(a.speed_reserve_ratio);
 
-            <h2>${a.full_name || "Unknown"}</h2>
+        document.getElementById("athleteData").innerHTML = `
+            <div class="card">
 
-            <div class="badges">
-                <span class="badge type-${a.runner_type_multi || "unknown"}">
-                    ${a.runner_type_multi || "unknown"}
-                </span>
-                <span class="badge confidence-${a.confidence_level || "none"}">
-                    ${a.confidence_level || "none"}
-                </span>
-            </div>
+                <h2>${a.full_name}</h2>
 
-            <!-- PR SECTION -->
-            <div class="section prs">
-                <h3>PRs</h3>
-                <div class="pr-grid">
-                    <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
-                    <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
-                    <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
-                    <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
-                    <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
+                <div class="identity">
+                    <div class="you-are">YOU ARE</div>
+                    <div class="type">${getAthleteLabel(a.runner_type_multi)}</div>
+                    <div class="confidence">${getConfidenceLabel(a.confidence_level)}</div>
                 </div>
-            </div>
 
-            <!-- TRAINING PROFILE -->
-            <div class="section profile">
-                <h3>Training Profile</h3>
-                <p><b>SER Multi:</b> ${formatNumber(a.ser_multi)}</p>
-                <p><b>Speed Reserve:</b> ${formatSeconds(a.speed_reserve_seconds)}</p>
-                <p><b>Ratio:</b> ${formatNumber(a.speed_reserve_ratio)}</p>
-                <p><b>Group:</b> ${a.training_group || "-"}</p>
-            </div>
+                <div class="section prs">
+                    <h3>PRs</h3>
+                    <div class="pr-grid">
+                        <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
+                        <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
+                        <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
+                        <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
+                        <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
+                    </div>
+                </div>
 
-            <!-- TRAINING FOCUS -->
-            <div class="section focus">
-                <h3>Training Focus</h3>
-                <p>${getFocus(a.training_group)}</p>
-            </div>
+                <div class="section focus">
+                    <h3>FOCUS</h3>
+                    <p>${getFocus(a.training_group)}</p>
 
-        </div>
-    `;
-}
+                    <div class="gauge">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width:${progress}%"></div>
+                        </div>
+                        <div class="gauge-label">
+                            ${progress}% toward next level
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        `;
+    }
 
 });
