@@ -44,6 +44,9 @@ window.addEventListener("load", function () {
 
         const dropdown = document.getElementById("athleteDropdown");
 
+        // prevent duplicates on reload
+        dropdown.innerHTML = "";
+
         data.forEach((athlete, index) => {
             const option = document.createElement("option");
             option.value = index;
@@ -63,12 +66,41 @@ window.addEventListener("load", function () {
         console.error(err);
     });
 
+    // ---------- Helpers ----------
+
     function formatTime(seconds) {
         if (seconds === null || seconds === undefined) return "-";
         const min = Math.floor(seconds / 60);
         const sec = (seconds % 60).toFixed(2).padStart(5, "0");
         return `${min}:${sec}`;
     }
+
+    function formatNumber(val) {
+        if (val === null || val === undefined) return "-";
+        return Number(val).toFixed(2);
+    }
+
+    function formatSeconds(val) {
+        if (val === null || val === undefined) return "-";
+        return Number(val).toFixed(1) + "s";
+    }
+
+    function getFocus(group) {
+        if (!group) return "-";
+
+        switch (group) {
+            case "aerobic_development":
+                return "Build aerobic strength (tempo, long intervals)";
+            case "speed_development":
+                return "Develop speed + turnover (strides, short reps)";
+            case "distance":
+                return "Race endurance (threshold + sustained efforts)";
+            default:
+                return "-";
+        }
+    }
+
+    // ---------- Render ----------
 
     function showAthlete(index) {
         const a = allData[index];
@@ -77,13 +109,37 @@ window.addEventListener("load", function () {
         const container = document.getElementById("athleteData");
 
         container.innerHTML = `
-            <h2>${a.full_name || "Unknown"}</h2>
-            <p><b>800:</b> ${formatTime(a.pr_800_seconds)}</p>
-            <p><b>1600:</b> ${formatTime(a.pr_1600_seconds)}</p>
-            <p><b>3200:</b> ${formatTime(a.pr_3200_seconds)}</p>
-            <p><b>5000:</b> ${formatTime(a.pr_5000_seconds)}</p>
-            <p><b>SER Ratio:</b> ${a.ser_ratio ?? "-"}</p>
-            <p><b>Running Type:</b> ${a.runner_type ?? "-"}</p>
+            <div class="card">
+
+                <h2>${a.full_name || "Unknown"}</h2>
+
+                <div class="section">
+                    <h3>PRs</h3>
+                    <div class="pr-grid">
+                        <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
+                        <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
+                        <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
+                        <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
+                        <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Training Profile</h3>
+                    <p><b>Type:</b> ${a.runner_type_multi || "-"}</p>
+                    <p><b>SER Multi:</b> ${formatNumber(a.ser_multi)}</p>
+                    <p><b>Speed Reserve:</b> ${formatSeconds(a.speed_reserve_seconds)}</p>
+                    <p><b>Ratio:</b> ${formatNumber(a.speed_reserve_ratio)}</p>
+                    <p><b>Confidence:</b> ${a.confidence_level || "-"}</p>
+                    <p><b>Group:</b> ${a.training_group || "-"}</p>
+                </div>
+
+                <div class="section">
+                    <h3>Training Focus</h3>
+                    <p>${getFocus(a.training_group)}</p>
+                </div>
+
+            </div>
         `;
     }
 
