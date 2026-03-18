@@ -5,7 +5,6 @@
     --text: #f5f5f5;
 }
 
-/* Base */
 body {
     font-family: Arial, sans-serif;
     background: var(--bg);
@@ -13,23 +12,19 @@ body {
     margin: 0;
 }
 
-/* Header */
 header {
-    background: var(--bg);
     color: var(--gold);
     padding: 20px;
     text-align: center;
     border-bottom: 2px solid var(--gold);
 }
 
-/* Layout */
 main {
     padding: 20px;
     max-width: 900px;
     margin: 0 auto;
 }
 
-/* Dropdown */
 select {
     padding: 8px;
     font-size: 16px;
@@ -39,37 +34,24 @@ select {
     border-radius: 4px;
 }
 
-select:hover {
-    border-color: #ffd700;
-}
-
-/* Status */
 #status {
     margin-top: 10px;
     color: var(--gold);
 }
 
-/* Container */
 #athleteData {
     margin-top: 20px;
 }
 
-/* Card */
 .card {
     border: 1px solid var(--gold);
     padding: 20px;
     border-radius: 10px;
     background: var(--panel);
     max-width: 700px;
-    margin: 0 auto; /* centers card */
+    margin: 0 auto;
 }
 
-/* Card hover */
-.card:hover {
-    box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-}
-
-/* Sections */
 .section {
     margin-top: 20px;
 }
@@ -78,18 +60,11 @@ select:hover {
     color: var(--gold);
     border-bottom: 1px solid var(--gold);
     padding-bottom: 6px;
-    margin-bottom: 10px;
 }
 
-/* Section variants */
 .section.prs {
     border-top: 2px solid var(--gold);
     padding-top: 15px;
-}
-
-.section.profile {
-    border-top: 1px solid rgba(212,175,55,0.4);
-    padding-top: 10px;
 }
 
 .section.focus {
@@ -99,7 +74,28 @@ select:hover {
     border-radius: 6px;
 }
 
-/* PR Grid */
+/* Identity */
+.identity {
+    margin-top: 10px;
+}
+
+.you-are {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.type {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.confidence {
+    font-size: 12px;
+    color: #888;
+}
+
+/* PR grid */
 .pr-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -115,37 +111,27 @@ select:hover {
 .pr-grid span {
     font-size: 18px;
     font-weight: bold;
-    color: #fff;
 }
 
-/* Mobile optimization */
-@media (max-width: 600px) {
-    .pr-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Gauge */
+.gauge {
+    margin-top: 10px;
 }
 
-/* Badges */
-.badges {
-    margin-top: 5px;
+.gauge-bar {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
 }
 
-.badge {
-    display: inline-block;
-    padding: 4px 10px;
-    margin-right: 8px;
-    border-radius: 12px;
+.gauge-fill {
+    height: 100%;
+    background: linear-gradient(to right, #d4af37, #ffd700);
+}
+
+.gauge-label {
     font-size: 12px;
-    font-weight: bold;
+    color: #aaa;
+    margin-top: 4px;
 }
-
-/* Type colors */
-.type-speed { background: #7f1d1d; color: #fff; }
-.type-endurance-leaning { background: #1d4ed8; color: #fff; }
-.type-balanced { background: #d4af37; color: #000; }
-.type-unknown { background: #333; color: #fff; }
-
-/* Confidence */
-.confidence-high { background: #065f46; color: #fff; }
-.confidence-low { background: #444; color: #fff; }
-.confidence-none { background: #222; color: #aaa; }
