@@ -135,3 +135,31 @@ select {
     color: #aaa;
     margin-top: 4px;
 }
+/* Courses section */
+.card.courses {
+    margin-top: 20px;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.course-item {
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.course-item label {
+    display: block;
+    font-size: 11px;
+    color: #aaa;
+}
+
+.course-item span {
+    font-size: 16px;
+    font-weight: bold;
+}
