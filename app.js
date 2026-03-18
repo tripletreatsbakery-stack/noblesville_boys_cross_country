@@ -1,55 +1,41 @@
-// Ensure page fully loaded
 window.addEventListener("load", function () {
-
-    if (!window.CONFIG) {
-        document.getElementById("status").innerText = "CONFIG not loaded";
-        return;
-    }
 
     const base = CONFIG.SUPABASE_URL + "/rest/v1/";
     const apiKey = CONFIG.SUPABASE_KEY;
 
     let allData = [];
     let courseData = [];
+    let yearData = [];
+
+    const headers = {
+        "apikey": apiKey,
+        "Authorization": "Bearer " + apiKey
+    };
 
     Promise.all([
-        fetch(base + "v_athlete_physiology", {
-            headers: {
-                "apikey": apiKey,
-                "Authorization": "Bearer " + apiKey
-            }
-        }).then(r => r.json()),
-
-        fetch(base + "v_active_athlete_prs_pivot", {
-            headers: {
-                "apikey": apiKey,
-                "Authorization": "Bearer " + apiKey
-            }
-        }).then(r => r.json())
+        fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
+        fetch(base + "v_active_athlete_prs_pivot", { headers }).then(r => r.json()),
+        fetch(base + "v_athlete_5k_years_wide", { headers }).then(r => r.json())
     ])
-    .then(([phys, courses]) => {
-
-        if (!phys || phys.length === 0) {
-            document.getElementById("status").innerText = "No data returned";
-            return;
-        }
+    .then(([phys, courses, years]) => {
 
         allData = phys;
         courseData = courses || [];
+        yearData = years || [];
 
         document.getElementById("status").innerText =
-            "Loaded " + phys.length + " athletes";
-
-        allData.sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
+            "Loaded " + allData.length + " athletes";
 
         const dropdown = document.getElementById("athleteDropdown");
         dropdown.innerHTML = "";
 
-        allData.forEach((athlete, index) => {
-            const option = document.createElement("option");
-            option.value = index;
-            option.textContent = athlete.full_name;
-            dropdown.appendChild(option);
+        allData.sort((a, b) => a.full_name.localeCompare(b.full_name));
+
+        allData.forEach((a, i) => {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = a.full_name;
+            dropdown.appendChild(opt);
         });
 
         showAthlete(0);
@@ -57,50 +43,54 @@ window.addEventListener("load", function () {
         dropdown.addEventListener("change", (e) => {
             showAthlete(e.target.value);
         });
-
     });
 
     // ---------- helpers ----------
 
-    function formatTime(seconds) {
-        if (seconds == null) return "-";
-        const min = Math.floor(seconds / 60);
-        const sec = (seconds % 60).toFixed(2).padStart(5, "0");
-        return `${min}:${sec}`;
+    function formatTime(sec) {
+        if (!sec) return "-";
+        const m = Math.floor(sec / 60);
+        const s = (sec % 60).toFixed(2).padStart(5, "0");
+        return `${m}:${s}`;
     }
 
-    function getAthleteLabel(type) {
-        switch (type) {
-            case "speed": return "Speed Builder";
-            case "endurance-leaning": return "Endurance Strength";
-            case "balanced": return "Balanced Runner";
-            default: return "Developing Runner";
-        }
+    function timeToSeconds(t) {
+        if (!t) return null;
+        const [m, s] = t.split(":");
+        return parseInt(m) * 60 + parseFloat(s);
     }
 
-    function getFocus(group) {
-        switch (group) {
-            case "speed_development":
-                return "Build endurance to improve 5K strength (tempo + longer intervals)";
-            case "aerobic_development":
-                return "Increase aerobic capacity for stronger 5K finishes";
-            case "distance":
-                return "Maintain endurance and sharpen race pace for 5K";
-            default:
-                return "-";
-        }
+    function getImprovement(row) {
+        if (!row) return null;
+
+        const f = timeToSeconds(row.freshman_pr);
+        const s =
+            timeToSeconds(row.senior_pr) ||
+            timeToSeconds(row.junior_pr) ||
+            timeToSeconds(row.sophomore_pr);
+
+        if (!f || !s) return null;
+
+        const d = f - s;
+        const m = Math.floor(d / 60);
+        const sec = (d % 60).toFixed(0).padStart(2, "0");
+
+        return `${m}:${sec}`;
     }
 
-    function getCourseRows(athleteId) {
-        const row = courseData.find(r => r.athlete_id === athleteId);
+    function getYearRow(name) {
+        return yearData.find(r => r.full_name === name);
+    }
+
+    function getCourseRows(id) {
+        const row = courseData.find(r => r.athlete_id === id);
         if (!row) return "";
 
         return Object.entries(row)
             .filter(([k, v]) =>
                 k !== "athlete_id" &&
                 k !== "full_name" &&
-                v !== null &&
-                v !== ""
+                v
             )
             .map(([k, v]) => `
                 <div class="course-item">
@@ -111,13 +101,63 @@ window.addEventListener("load", function () {
             .join("");
     }
 
+    function buildYearHTML(row) {
+        if (!row) return "<div class='empty'>No data</div>";
+
+        const years = [
+            ["Freshman", row.freshman_pr],
+            ["Sophomore", row.sophomore_pr],
+            ["Junior", row.junior_pr],
+            ["Senior", row.senior_pr]
+        ];
+
+        const blocks = years
+            .filter(([_, v]) => v)
+            .map(([label, val]) => `
+                <div class="year-item">
+                    <label>${label}</label>
+                    <span>${val}</span>
+                </div>
+            `)
+            .join("");
+
+        const improvement = getImprovement(row);
+
+        return `
+            <div class="year-grid">${blocks}</div>
+            ${
+                improvement
+                    ? `<div class="improvement">
+                        ↓ ${improvement} since freshman
+                       </div>`
+                    : ""
+            }
+        `;
+    }
+
+    function getLabel(type) {
+        if (type === "speed") return "Speed Builder";
+        if (type === "endurance-leaning") return "Endurance Strength";
+        if (type === "balanced") return "Balanced Runner";
+        return "Developing Runner";
+    }
+
+    function getFocus(group) {
+        if (group === "speed_development")
+            return "Build endurance to improve 5K strength";
+        if (group === "aerobic_development")
+            return "Increase aerobic capacity for stronger finishes";
+        return "-";
+    }
+
     // ---------- render ----------
 
-    function showAthlete(index) {
-        const a = allData[index];
+    function showAthlete(i) {
+        const a = allData[i];
         if (!a) return;
 
-        const coursesHTML = getCourseRows(a.athlete_id);
+        const courses = getCourseRows(a.athlete_id);
+        const years = getYearRow(a.full_name);
 
         document.getElementById("athleteData").innerHTML = `
             <div class="card">
@@ -126,7 +166,7 @@ window.addEventListener("load", function () {
 
                 <div class="identity">
                     <div class="you-are">YOU ARE</div>
-                    <div class="type">${getAthleteLabel(a.runner_type_multi)}</div>
+                    <div class="type">${getLabel(a.runner_type_multi)}</div>
                 </div>
 
                 <div class="section prs">
@@ -147,13 +187,26 @@ window.addEventListener("load", function () {
 
             </div>
 
-            ${coursesHTML ? `
-                <div class="card courses">
-                    <h3>COURSE TIMES</h3>
-                    <div class="course-grid">
-                        ${coursesHTML}
+            ${(courses || years) ? `
+            <div class="card courses">
+
+                <h3>COURSE & PROGRESSION</h3>
+
+                <div class="course-layout">
+
+                    <div>
+                        <h4>Course Times</h4>
+                        <div class="course-grid">${courses}</div>
                     </div>
+
+                    <div>
+                        <h4>Progression</h4>
+                        ${buildYearHTML(years)}
+                    </div>
+
                 </div>
+
+            </div>
             ` : ""}
         `;
     }
