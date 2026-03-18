@@ -6,42 +6,49 @@ window.addEventListener("load", function () {
         return;
     }
 
-    const url = CONFIG.SUPABASE_URL + "/rest/v1/v_athlete_physiology";
+    const base = CONFIG.SUPABASE_URL + "/rest/v1/";
     const apiKey = CONFIG.SUPABASE_KEY;
 
     let allData = [];
+    let courseData = [];
 
-    fetch(url, {
-        headers: {
-            "apikey": apiKey,
-            "Authorization": "Bearer " + apiKey,
-            "Content-Type": "application/json"
-        }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        return res.json();
-    })
-    .then(data => {
+    Promise.all([
+        fetch(base + "v_athlete_physiology", {
+            headers: {
+                "apikey": apiKey,
+                "Authorization": "Bearer " + apiKey
+            }
+        }).then(r => r.json()),
 
-        if (!data || data.length === 0) {
+        fetch(base + "v_active_athlete_prs_pivot", {
+            headers: {
+                "apikey": apiKey,
+                "Authorization": "Bearer " + apiKey
+            }
+        }).then(r => r.json())
+    ])
+    .then(([phys, courses]) => {
+
+        if (!phys || phys.length === 0) {
             document.getElementById("status").innerText = "No data returned";
             return;
         }
 
-        document.getElementById("status").innerText =
-            "Loaded " + data.length + " athletes";
+        allData = phys;
+        courseData = courses || [];
 
-        data.sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
-        allData = data;
+        document.getElementById("status").innerText =
+            "Loaded " + phys.length + " athletes";
+
+        allData.sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
 
         const dropdown = document.getElementById("athleteDropdown");
         dropdown.innerHTML = "";
 
-        data.forEach((athlete, index) => {
+        allData.forEach((athlete, index) => {
             const option = document.createElement("option");
             option.value = index;
-            option.textContent = athlete.full_name || "Unknown";
+            option.textContent = athlete.full_name;
             dropdown.appendChild(option);
         });
 
@@ -51,23 +58,15 @@ window.addEventListener("load", function () {
             showAthlete(e.target.value);
         });
 
-    })
-    .catch(err => {
-        document.getElementById("status").innerText = "Error: " + err.message;
     });
 
-    // ---------- Helpers ----------
+    // ---------- helpers ----------
 
     function formatTime(seconds) {
         if (seconds == null) return "-";
         const min = Math.floor(seconds / 60);
         const sec = (seconds % 60).toFixed(2).padStart(5, "0");
         return `${min}:${sec}`;
-    }
-
-    function formatNumber(val) {
-        if (val == null) return "-";
-        return Number(val).toFixed(2);
     }
 
     function getAthleteLabel(type) {
@@ -77,12 +76,6 @@ window.addEventListener("load", function () {
             case "balanced": return "Balanced Runner";
             default: return "Developing Runner";
         }
-    }
-
-    function getConfidenceLabel(conf) {
-        if (conf === "high") return "High Confidence";
-        if (conf === "low") return "Early Data";
-        return "";
     }
 
     function getFocus(group) {
@@ -98,22 +91,33 @@ window.addEventListener("load", function () {
         }
     }
 
-    function getProgress(val) {
-        if (val == null) return 0;
-        const min = -0.2;
-        const max = 0.2;
-        let pct = (val - min) / (max - min);
-        pct = Math.max(0, Math.min(1, pct));
-        return Math.round(pct * 100);
+    function getCourseRows(athleteId) {
+        const row = courseData.find(r => r.athlete_id === athleteId);
+        if (!row) return "";
+
+        return Object.entries(row)
+            .filter(([k, v]) =>
+                k !== "athlete_id" &&
+                k !== "full_name" &&
+                v !== null &&
+                v !== ""
+            )
+            .map(([k, v]) => `
+                <div class="course-item">
+                    <label>${k.replace(/_/g, " ")}</label>
+                    <span>${v}</span>
+                </div>
+            `)
+            .join("");
     }
 
-    // ---------- Render ----------
+    // ---------- render ----------
 
     function showAthlete(index) {
         const a = allData[index];
         if (!a) return;
 
-        const progress = getProgress(a.speed_reserve_ratio);
+        const coursesHTML = getCourseRows(a.athlete_id);
 
         document.getElementById("athleteData").innerHTML = `
             <div class="card">
@@ -123,7 +127,6 @@ window.addEventListener("load", function () {
                 <div class="identity">
                     <div class="you-are">YOU ARE</div>
                     <div class="type">${getAthleteLabel(a.runner_type_multi)}</div>
-                    <div class="confidence">${getConfidenceLabel(a.confidence_level)}</div>
                 </div>
 
                 <div class="section prs">
@@ -140,18 +143,18 @@ window.addEventListener("load", function () {
                 <div class="section focus">
                     <h3>FOCUS</h3>
                     <p>${getFocus(a.training_group)}</p>
-
-                    <div class="gauge">
-                        <div class="gauge-bar">
-                            <div class="gauge-fill" style="width:${progress}%"></div>
-                        </div>
-                        <div class="gauge-label">
-                            ${progress}% toward next level
-                        </div>
-                    </div>
                 </div>
 
             </div>
+
+            ${coursesHTML ? `
+                <div class="card courses">
+                    <h3>COURSE TIMES</h3>
+                    <div class="course-grid">
+                        ${coursesHTML}
+                    </div>
+                </div>
+            ` : ""}
         `;
     }
 
