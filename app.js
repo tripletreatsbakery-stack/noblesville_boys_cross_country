@@ -8,30 +8,33 @@ window.addEventListener("load", function () {
         "Authorization": "Bearer " + apiKey
     };
 
-    let allData = [];
+    let physData = [];
     let courseData = [];
     let yearData = [];
+    let trainingData = [];
 
     Promise.all([
         fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
         fetch(base + "v_active_athlete_prs_pivot", { headers }).then(r => r.json()),
-        fetch(base + "v_athlete_5k_years_wide", { headers }).then(r => r.json())
+        fetch(base + "v_athlete_5k_years_wide", { headers }).then(r => r.json()),
+        fetch(base + "v_athlete_training_output", { headers }).then(r => r.json())
     ])
-    .then(([phys, courses, years]) => {
+    .then(([phys, courses, years, training]) => {
 
-        allData = phys;
+        physData = phys;
         courseData = courses || [];
         yearData = years || [];
+        trainingData = training || [];
 
         document.getElementById("status").innerText =
-            "Loaded " + allData.length + " athletes";
+            "Loaded " + physData.length + " athletes";
 
         const dropdown = document.getElementById("athleteDropdown");
         dropdown.innerHTML = "";
 
-        allData.sort((a, b) => a.full_name.localeCompare(b.full_name));
+        physData.sort((a, b) => a.full_name.localeCompare(b.full_name));
 
-        allData.forEach((a, i) => {
+        physData.forEach((a, i) => {
             const opt = document.createElement("option");
             opt.value = i;
             opt.textContent = a.full_name;
@@ -40,18 +43,33 @@ window.addEventListener("load", function () {
 
         showAthlete(0);
 
-        dropdown.addEventListener("change", (e) => {
+        dropdown.addEventListener("change", e => {
             showAthlete(e.target.value);
         });
     });
 
     // ---------- helpers ----------
 
-    function formatTime(sec) {
-        if (!sec) return "-";
-        const m = Math.floor(sec / 60);
-        const s = (sec % 60).toFixed(2).padStart(5, "0");
-        return `${m}:${s}`;
+    function getTraining(name) {
+        return trainingData.find(r => r.full_name === name);
+    }
+
+    function getCourses(id) {
+        const row = courseData.find(r => r.athlete_id === id);
+        if (!row) return "";
+
+        return Object.entries(row)
+            .filter(([k, v]) => k !== "athlete_id" && k !== "full_name" && v)
+            .map(([k, v]) => `
+                <div class="course-item">
+                    <label>${k.replace(/_/g, " ")}</label>
+                    <span>${v}</span>
+                </div>
+            `).join("");
+    }
+
+    function getYearRow(name) {
+        return yearData.find(r => r.full_name === name);
     }
 
     function timeToSeconds(t) {
@@ -78,31 +96,8 @@ window.addEventListener("load", function () {
         return `${m}:${sec}`;
     }
 
-    function getYearRow(name) {
-        return yearData.find(r => r.full_name === name);
-    }
-
-    function getCourseRows(id) {
-        const row = courseData.find(r => r.athlete_id === id);
-        if (!row) return "";
-
-        return Object.entries(row)
-            .filter(([k, v]) =>
-                k !== "athlete_id" &&
-                k !== "full_name" &&
-                v
-            )
-            .map(([k, v]) => `
-                <div class="course-item">
-                    <label>${k.replace(/_/g, " ")}</label>
-                    <span>${v}</span>
-                </div>
-            `)
-            .join("");
-    }
-
     function buildYearHTML(row) {
-        if (!row) return "<div class='empty'>No data</div>";
+        if (!row) return "No data";
 
         const years = [
             ["Freshman", row.freshman_pr],
@@ -118,131 +113,132 @@ window.addEventListener("load", function () {
                     <label>${label}</label>
                     <span>${val}</span>
                 </div>
-            `)
-            .join("");
+            `).join("");
 
-        const improvement = getImprovement(row);
+        const imp = getImprovement(row);
 
         return `
             <div class="year-grid">${blocks}</div>
-            ${
-                improvement
-                    ? `<div class="improvement">
-                        ↓ ${improvement} since freshman
-                       </div>`
-                    : ""
-            }
+            ${imp ? `<div class="improvement">↓ ${imp} since freshman</div>` : ""}
         `;
     }
 
-    function getLabelFromGroup(group) {
-        if (!group) return "Balanced";
+    function formatTime(sec) {
+        if (!sec) return "-";
+        const m = Math.floor(sec / 60);
+        const s = (sec % 60).toFixed(2).padStart(5, "0");
+        return `${m}:${s}`;
+    }
 
-        if (group.includes("speed")) return "Speed";
-        if (group.includes("aerobic") || group.includes("distance")) return "Endurance";
+    // ---------- 2D MAP ----------
 
+    function normalize(val, min, max) {
+        if (val == null) return 0.5;
+        let n = (val - min) / (max - min);
+        return Math.max(0, Math.min(1, n));
+    }
+
+    function get2DPosition(t) {
+        const serMin = 1.023;
+        const serMax = 1.164;
+
+        const speedMin = 0.0;
+        const speedMax = 0.13;
+
+        const x = normalize(t.speed_reserve_ratio, speedMin, speedMax);
+        const y = normalize(t.ser_estimate_raw, serMin, serMax);
+
+        return {
+            x: x * 100,
+            y: (1 - y) * 100
+        };
+    }
+
+    function build2DMap(t) {
+        const pos = get2DPosition(t);
+
+        return `
+            <div class="quad">
+                <div class="dot" style="left:${pos.x}%; top:${pos.y}%;"></div>
+            </div>
+        `;
+    }
+
+    function labelMap(g) {
+        if (!g) return "Developing";
+        if (g === "speed") return "Speed";
+        if (g === "distance") return "Endurance";
         return "Balanced";
     }
 
-    // ---------- GAUGE ----------
-
-    function getSpectrumPosition(val) {
-        if (val == null) return 50;
-
-        const min = 0.85;
-        const max = 1.15;
-
-        let pct = (val - min) / (max - min);
-        pct = Math.max(0, Math.min(1, pct));
-
-        return Math.round(pct * 100);
-    }
-
-    function buildGauge(a) {
-        const pos = getSpectrumPosition(a.ser_multi);
-
-        return `
-            <div class="spectrum">
-
-                <div class="labels">
-                    <span>SPEED</span>
-                    <span>BALANCED</span>
-                    <span>ENDURANCE</span>
-                </div>
-
-                <div class="bar">
-                    <div class="marker" style="left:${pos}%"></div>
-                </div>
-
-            </div>
-        `;
+    function focusMap(f) {
+        const map = {
+            balanced: "Maintain balance",
+            general_development: "Build base endurance",
+            speed_support: "Add speed + turnover",
+            aerobic_priority: "Build aerobic strength",
+            speed_priority: "Develop speed"
+        };
+        return map[f] || "-";
     }
 
     // ---------- render ----------
 
     function showAthlete(i) {
-        const a = allData[i];
-        if (!a) return;
-
-        const courses = getCourseRows(a.athlete_id);
+        const a = physData[i];
+        const t = getTraining(a.full_name);
+        const courses = getCourses(a.athlete_id);
         const years = getYearRow(a.full_name);
 
         document.getElementById("athleteData").innerHTML = `
-            <div class="card">
 
-                <h2>${a.full_name}</h2>
+        <div class="card training">
+            <h2>${a.full_name}</h2>
 
-                <div class="identity">
-                    <div class="you-are">YOU ARE</div>
-                    <div class="type">${getLabelFromGroup(a.training_group)}</div>
-                    ${buildGauge(a)}
+            <div class="you-are">YOU ARE</div>
+            <div class="type">${labelMap(t?.training_group)}</div>
+
+            ${t ? build2DMap(t) : ""}
+
+            <div class="focus-block">
+                <label>FOCUS</label>
+                <p>${focusMap(t?.focus_type)}</p>
+            </div>
+
+            <div class="action-block">
+                <label>NEXT ACTION</label>
+                <p>${t?.next_action || "-"}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>PRs</h3>
+            <div class="pr-grid">
+                <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
+                <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
+                <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
+                <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
+                <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>HISTORY</h3>
+
+            <div class="course-layout">
+
+                <div>
+                    <h4>Courses</h4>
+                    <div class="course-grid">${courses}</div>
                 </div>
 
-                <div class="section prs">
-                    <h3>PRs</h3>
-                    <div class="pr-grid">
-                        <div><label>800</label><span>${formatTime(a.pr_800_seconds)}</span></div>
-                        <div><label>1600</label><span>${formatTime(a.pr_1600_seconds)}</span></div>
-                        <div><label>3200</label><span>${formatTime(a.pr_3200_seconds)}</span></div>
-                        <div><label>4000</label><span>${formatTime(a.pr_4000_seconds)}</span></div>
-                        <div><label>5000</label><span>${formatTime(a.pr_5000_seconds)}</span></div>
-                    </div>
-                </div>
-
-                <div class="section focus">
-                    <h3>FOCUS</h3>
-                    <p>${
-                        a.training_group === "speed_development"
-                            ? "Build endurance to improve 5K strength"
-                            : a.training_group === "aerobic_development"
-                            ? "Increase aerobic capacity for stronger finishes"
-                            : "-"
-                    }</p>
+                <div>
+                    <h4>Progression</h4>
+                    ${buildYearHTML(years)}
                 </div>
 
             </div>
-
-            ${(courses || years) ? `
-            <div class="card courses">
-
-                <h3>COURSE & PROGRESSION</h3>
-
-                <div class="course-layout">
-
-                    <div>
-                        <h4>Course Times</h4>
-                        <div class="course-grid">${courses}</div>
-                    </div>
-
-                    <div>
-                        <h4>Progression</h4>
-                        ${buildYearHTML(years)}
-                    </div>
-
-                </div>
-
-            </div>
-            ` : ""}
+        </div>
         `;
     }
 
