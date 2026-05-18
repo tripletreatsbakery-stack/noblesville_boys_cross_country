@@ -1,239 +1,199 @@
-:root {
-    --bg: #000;
-    --panel: #111;
-    --gold: #d4af37;
-    --text: #f5f5f5;
-}
+function showAthlete(i) {
 
-/* ---------- BASE ---------- */
+    const a = physData[i];
 
-body {
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-}
+    const t = getTraining(a.full_name);
 
-header {
-    color: var(--gold);
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid var(--gold);
-}
+    const courses = getCourses(a.athlete_id);
 
-main {
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
-}
+    const years = getYearRow(a.full_name);
 
-select {
-    padding: 8px;
-    background: var(--panel);
-    color: var(--text);
-    border: 1px solid var(--gold);
-}
+    document.getElementById("athleteData").innerHTML = `
 
-#status {
-    color: var(--gold);
-    margin-top: 10px;
-}
+    <div class="card training">
 
-/* ---------- CARDS ---------- */
+        <h2>${a.full_name}</h2>
 
-.card {
-    border: 1px solid var(--gold);
-    padding: 20px;
-    border-radius: 10px;
-    background: var(--panel);
-    margin-top: 20px;
-}
+        <div class="you-are">YOU ARE</div>
 
-.card h3 {
-    color: var(--gold);
-    border-bottom: 1px solid var(--gold);
-    padding-bottom: 5px;
-}
+        <div class="type">
+            ${formatLabel(t?.runner_type)}
+        </div>
 
-/* Highlighted training card */
-.training {
-    background: rgba(212,175,55,0.06);
-}
+        <div class="focus-block single-focus">
+            <label>TRAINING FOCUS</label>
+            <p>${formatLabel(t?.training_focus)}</p>
+        </div>
 
-/* spacing inside training block */
-.training > * {
-    margin-bottom: 12px;
-}
+    </div>
 
-/* ---------- TYPOGRAPHY ---------- */
+    <div class="card pace-zones-card">
 
-.you-are {
-    font-size: 12px;
-    color: #888;
-    letter-spacing: 1px;
-}
+        <h3>PACE ZONES</h3>
 
-.type {
-    font-size: 22px;
-    color: var(--gold);
-    font-weight: bold;
-}
+        <div class="pace-scroll">
 
-label {
-    font-size: 11px;
-    color: #888;
-    letter-spacing: 0.5px;
-}
+            <div class="pace-card">
 
-span {
-    font-size: 17px;
-    font-weight: 600;
-}
+                <div class="pace-title">RECOVERY</div>
 
-/* ---------- PR GRID ---------- */
+                <div class="pace-icon">↻</div>
 
-.pr-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-    text-align: center;
-}
+                <div class="pace-range">
+                    ${formatTime(t?.recovery_sec)}
+                    -
+                    ${t?.aerobic_easy_min_pace || "-"}
+                </div>
 
-/* ---------- TRAINING BLOCK ---------- */
+                <div class="pace-unit">min/mi</div>
 
-.focus-block {
-    background: rgba(212,175,55,0.05);
-    padding: 12px;
-    border-radius: 6px;
-}
+            </div>
 
-.action-block {
-    border: 1px solid var(--gold);
-    padding: 12px;
-    border-radius: 6px;
-}
+            <div class="pace-card">
 
-/* ---------- 2D QUADRANT MAP ---------- */
+                <div class="pace-title">AEROBIC EASY</div>
 
-.quad {
-    position: relative;
-    height: 160px;
-    border: 1px solid var(--gold);
-    margin-top: 10px;
-    background: rgba(255,255,255,0.02);
-}
+                <div class="pace-icon">♡</div>
 
-/* center axes */
-.quad::before,
-.quad::after {
-    content: "";
-    position: absolute;
-    background: rgba(212,175,55,0.4);
-}
+                <div class="pace-range">
+                    ${t?.aerobic_easy_min_pace || "-"}
+                    -
+                    ${t?.aerobic_easy_max_pace || "-"}
+                </div>
 
-.quad::before {
-    width: 100%;
-    height: 1px;
-    top: 50%;
-}
+                <div class="pace-unit">min/mi</div>
 
-.quad::after {
-    width: 1px;
-    height: 100%;
-    left: 50%;
-}
+            </div>
 
-/* athlete dot */
-.dot {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: white;
-    border: 2px solid var(--bg);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-}
+            <div class="pace-card">
 
-/* quadrant labels */
-.quad-label {
-    position: absolute;
-    font-size: 10px;
-    color: #888;
-}
+                <div class="pace-title">STEADY</div>
 
-.q-top-left { top: 5px; left: 5px; }
-.q-top-right { top: 5px; right: 5px; }
-.q-bottom-left { bottom: 5px; left: 5px; }
-.q-bottom-right { bottom: 5px; right: 5px; }
+                <div class="pace-icon">∿</div>
 
-/* ---------- COURSE + HISTORY ---------- */
+                <div class="pace-range">
+                    ${formatTime(t?.steady_sec)}
+                    -
+                    ${t?.threshold_min_pace || "-"}
+                </div>
 
-.course-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
+                <div class="pace-unit">min/mi</div>
 
-.course-grid {
-    display: grid;
-    gap: 10px;
-}
+            </div>
 
-.course-item {
-    background: rgba(255,255,255,0.04);
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-}
+            <div class="pace-card">
 
-.course-item span {
-    font-weight: 600;
-}
+                <div class="pace-title">THRESHOLD</div>
 
-/* ---------- YEAR PROGRESSION ---------- */
+                <div class="pace-icon">◔</div>
 
-.year-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
+                <div class="pace-range">
+                    ${t?.threshold_min_pace || "-"}
+                    -
+                    ${t?.threshold_max_pace || "-"}
+                </div>
 
-.year-item {
-    background: rgba(255,255,255,0.04);
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-}
+                <div class="pace-unit">min/mi</div>
 
-.year-item span {
-    font-weight: 600;
-}
+            </div>
 
-.improvement {
-    margin-top: 12px;
-    padding: 10px;
-    border: 1px solid var(--gold);
-    border-radius: 6px;
-    text-align: center;
-    color: var(--gold);
-    font-weight: bold;
-}
+            <div class="pace-card">
 
-/* ---------- MOBILE ---------- */
+                <div class="pace-title">CRITICAL VELOCITY</div>
 
-@media (max-width: 700px) {
+                <div class="pace-icon">⚡</div>
 
-    .course-layout {
-        grid-template-columns: 1fr;
-    }
+                <div class="pace-range">
+                    ${t?.cv_pace || "-"}
+                    -
+                    ${t?.vo2_pace || "-"}
+                </div>
 
-    .pr-grid {
-        flex-direction: column;
-        align-items: center;
-    }
+                <div class="pace-unit">min/mi</div>
 
-    .year-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+            </div>
+
+            <div class="pace-card">
+
+                <div class="pace-title">VO2</div>
+
+                <div class="pace-icon">◉</div>
+
+                <div class="pace-range">
+                    ${t?.vo2_pace || "-"}
+                    -
+                    ${t?.vo2_pace || "-"}
+                </div>
+
+                <div class="pace-unit">min/mi</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>PRs</h3>
+
+        <div class="pr-grid">
+
+            <div>
+                <label>800</label>
+                <span>${formatTime(a.pr_800_seconds)}</span>
+            </div>
+
+            <div>
+                <label>1600</label>
+                <span>${formatTime(a.pr_1600_seconds)}</span>
+            </div>
+
+            <div>
+                <label>3200</label>
+                <span>${formatTime(a.pr_3200_seconds)}</span>
+            </div>
+
+            <div>
+                <label>4000</label>
+                <span>${formatTime(a.pr_4000_seconds)}</span>
+            </div>
+
+            <div>
+                <label>5000</label>
+                <span>${formatTime(a.pr_5000_seconds)}</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>HISTORY</h3>
+
+        <div class="course-layout">
+
+            <div>
+
+                <h4>Courses</h4>
+
+                <div class="course-grid">
+                    ${courses}
+                </div>
+
+            </div>
+
+            <div>
+
+                <h4>Progression</h4>
+
+                ${buildYearHTML(years)}
+
+            </div>
+
+        </div>
+
+    </div>
+    `;
 }
