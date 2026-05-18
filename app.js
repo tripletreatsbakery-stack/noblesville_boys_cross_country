@@ -128,35 +128,6 @@ window.addEventListener("load", function () {
         return `${m}:${sec}`;
     }
 
-    function buildYearHTML(row) {
-
-        if (!row) return "No data";
-
-        const years = [
-            ["Freshman", row.freshman_pr],
-            ["Sophomore", row.sophomore_pr],
-            ["Junior", row.junior_pr],
-            ["Senior", row.senior_pr]
-        ];
-
-        const blocks = years
-            .filter(([_, v]) => v)
-            .map(([label, val]) => `
-                <div class="year-item">
-                    <label>${label}</label>
-                    <span>${val}</span>
-                </div>
-            `)
-            .join("");
-
-        const imp = getImprovement(row);
-
-        return `
-            <div class="year-grid">${blocks}</div>
-            ${imp ? `<div class="improvement">↓ ${imp} since freshman</div>` : ""}
-        `;
-    }
-
     function formatTime(sec) {
 
         if (!sec) return "-";
@@ -177,6 +148,69 @@ window.addEventListener("load", function () {
         return v
             .replace(/_/g, " ")
             .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatPaceFrom5k(timeStr) {
+
+        if (!timeStr) return "-";
+
+        const [m, s] = timeStr.split(":");
+
+        const totalSec =
+            parseInt(m) * 60 + parseFloat(s);
+
+        const paceSec = totalSec / 3.10686;
+
+        const paceMin = Math.floor(paceSec / 60);
+
+        const paceRemain = Math.round(paceSec % 60)
+            .toString()
+            .padStart(2, "0");
+
+        return `${paceMin}:${paceRemain}/mi`;
+    }
+
+    function buildYearHTML(row) {
+
+        if (!row) return "No data";
+
+        const years = [
+            ["Freshman", row.freshman_pr],
+            ["Sophomore", row.sophomore_pr],
+            ["Junior", row.junior_pr],
+            ["Senior", row.senior_pr]
+        ];
+
+        const blocks = years
+            .filter(([_, v]) => v)
+            .map(([label, val]) => `
+
+                <div class="year-item">
+
+                    <div class="year-left">
+                        <label>${label}</label>
+                    </div>
+
+                    <div class="year-right">
+
+                        <span>${val}</span>
+
+                        <div class="year-pace">
+                            ${formatPaceFrom5k(val)}
+                        </div>
+
+                    </div>
+
+                </div>
+            `)
+            .join("");
+
+        const imp = getImprovement(row);
+
+        return `
+            <div class="year-grid">${blocks}</div>
+            ${imp ? `<div class="improvement">↓ ${imp} since freshman</div>` : ""}
+        `;
     }
 
     // =========================================
@@ -219,7 +253,7 @@ window.addEventListener("load", function () {
 
         <div class="card pace-zones-card">
 
-            <h3>TRAINING PACE ZONES</h3>
+            <h3>PACE ZONES</h3>
 
             <div class="pace-scroll">
 
