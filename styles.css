@@ -40,9 +40,12 @@ select {
 .card {
     border: 1px solid var(--gold);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 14px;
     background: var(--panel);
     margin-top: 20px;
+    box-shadow:
+        0 0 0 rgba(0,0,0,0),
+        0 0 25px rgba(212,175,55,0.03);
 }
 
 .identity {
@@ -57,10 +60,11 @@ select {
 }
 
 .type {
-    font-size: 22px;
+    font-size: 36px;
     color: var(--gold);
-    font-weight: bold;
-    margin-top: 6px;
+    font-weight: 800;
+    margin-top: 10px;
+    letter-spacing: -1px;
 }
 
 .section {
@@ -73,22 +77,73 @@ select {
     padding-bottom: 5px;
 }
 
+/* ========================================= */
+/* PR GRID */
+/* ========================================= */
+
 .pr-grid {
+
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+.pr-grid > div {
+
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.01)
+    );
+
+    border: 1px solid rgba(212,175,55,0.10);
+
+    border-radius: 14px;
+
+    padding: 18px;
+
     text-align: center;
-    margin-top: 10px;
-    gap: 10px;
+
+    transition: 0.2s ease;
+}
+
+.pr-grid > div:hover {
+
+    transform: translateY(-3px);
+
+    border-color: rgba(212,175,55,0.45);
+
+    background: rgba(212,175,55,0.04);
 }
 
 .pr-grid label {
-    font-size: 11px;
-    color: #aaa;
+
+    display: block;
+
+    font-size: 12px;
+
+    color: #999;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 10px;
 }
 
 .pr-grid span {
-    font-size: 16px;
-    font-weight: bold;
+
+    display: block;
+
+    font-size: 30px;
+
+    font-weight: 800;
+
+    color: white;
+
+    letter-spacing: -1px;
 }
 
 .section.focus {
@@ -97,67 +152,148 @@ select {
     border-radius: 6px;
 }
 
-/* Split layout */
+/* ========================================= */
+/* SPLIT LAYOUT */
+/* ========================================= */
 
 .course-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 24px;
+    margin-top: 20px;
 }
 
 .course-grid {
     display: grid;
-    gap: 10px;
+    gap: 12px;
 }
 
+/* ========================================= */
+/* COURSE ITEMS */
+/* ========================================= */
+
 .course-item {
-    background: rgba(255,255,255,0.03);
-    padding: 8px;
-    border-radius: 6px;
-    text-align: center;
+
+    background: rgba(255,255,255,0.025);
+
+    border-left: 4px solid var(--gold);
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    transition: 0.2s ease;
+}
+
+.course-item:hover {
+
+    background: rgba(212,175,55,0.04);
+
+    transform: translateX(3px);
 }
 
 .course-item label {
-    font-size: 11px;
-    color: #aaa;
+
+    font-size: 13px;
+
+    color: #bbb;
+
+    text-transform: capitalize;
 }
 
 .course-item span {
-    font-weight: bold;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    color: white;
 }
+
+/* ========================================= */
+/* YEAR GRID */
+/* ========================================= */
 
 .year-grid {
     display: grid;
-    gap: 10px;
+    gap: 12px;
 }
 
 .year-item {
-    background: rgba(255,255,255,0.03);
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
+
+    background: rgba(255,255,255,0.025);
+
+    border-radius: 10px;
+
+    padding: 16px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-left: 4px solid rgba(212,175,55,0.5);
 }
 
 .year-item label {
-    font-size: 11px;
+
+    font-size: 14px;
+
     color: #aaa;
+
+    font-weight: 600;
 }
 
 .year-item span {
-    font-weight: bold;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: white;
 }
+
+/* ========================================= */
+/* IMPROVEMENT */
+/* ========================================= */
 
 .improvement {
-    margin-top: 12px;
-    padding: 10px;
-    border: 1px solid var(--gold);
-    border-radius: 6px;
+
+    margin-top: 18px;
+
+    background: linear-gradient(
+        90deg,
+        rgba(212,175,55,0.12),
+        rgba(212,175,55,0.02)
+    );
+
+    border: 1px solid rgba(212,175,55,0.25);
+
+    border-radius: 12px;
+
+    padding: 16px;
+
     text-align: center;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
     color: var(--gold);
-    font-weight: bold;
+
+    letter-spacing: 0.5px;
 }
 
-/* Spectrum gauge */
+/* ========================================= */
+/* SPECTRUM */
+/* ========================================= */
 
 .spectrum {
     margin-top: 15px;
@@ -199,24 +335,36 @@ select {
 /* ========================================= */
 
 .single-focus {
+
     margin-top: 20px;
-    padding: 16px;
+
+    padding: 18px;
+
     background: rgba(212,175,55,0.04);
-    border-radius: 8px;
+
+    border-radius: 10px;
 }
 
 .single-focus label {
+
     display: block;
+
     font-size: 11px;
+
     color: #aaa;
-    margin-bottom: 10px;
+
+    margin-bottom: 12px;
+
     letter-spacing: 1px;
 }
 
 .single-focus p {
+
     margin: 0;
-    font-size: 16px;
-    font-weight: bold;
+
+    font-size: 18px;
+
+    font-weight: 700;
 }
 
 /* ========================================= */
@@ -228,9 +376,13 @@ select {
 }
 
 .pace-zones-card h3 {
+
     color: var(--gold);
+
     border-bottom: 1px solid var(--gold);
+
     padding-bottom: 10px;
+
     margin-bottom: 18px;
 }
 
@@ -334,10 +486,45 @@ select {
 }
 
 /* ========================================= */
+/* HEADERS */
+/* ========================================= */
+
+h2 {
+
+    margin-top: 0;
+
+    font-size: 42px;
+
+    letter-spacing: -1px;
+}
+
+h3 {
+
+    font-size: 30px;
+
+    margin-top: 0;
+
+    letter-spacing: -1px;
+}
+
+h4 {
+
+    color: white;
+
+    font-size: 20px;
+
+    margin-bottom: 14px;
+}
+
+/* ========================================= */
 /* MOBILE */
 /* ========================================= */
 
 @media (max-width: 700px) {
+
+    main {
+        padding: 14px;
+    }
 
     .course-layout {
         grid-template-columns: 1fr;
@@ -354,5 +541,22 @@ select {
 
     .pace-range {
         font-size: 16px;
+    }
+
+    .type {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 32px;
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    .course-item span,
+    .year-item span {
+        font-size: 22px;
     }
 }
