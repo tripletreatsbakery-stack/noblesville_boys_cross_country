@@ -163,9 +163,9 @@ window.addEventListener("load", function () {
 
         const m = Math.floor(sec / 60);
 
-        const s = (sec % 60)
-            .toFixed(2)
-            .padStart(5, "0");
+        const s = Math.round(sec % 60)
+            .toString()
+            .padStart(2, "0");
 
         return `${m}:${s}`;
     }
@@ -234,9 +234,9 @@ window.addEventListener("load", function () {
                     </div>
 
                     <div class="pace-range">
-                        ${formatTime(t?.recovery_sec)}
+                        ${t?.recovery_min_pace || "-"}
                         -
-                        ${t?.aerobic_easy_min_pace || "-"}
+                        ${t?.recovery_max_pace || "-"}
                     </div>
 
                     <div class="pace-unit">
@@ -279,8 +279,6 @@ window.addEventListener("load", function () {
 
                     <div class="pace-range">
                         ${formatTime(t?.steady_sec)}
-                        -
-                        ${t?.threshold_min_pace || "-"}
                     </div>
 
                     <div class="pace-unit">
@@ -322,9 +320,9 @@ window.addEventListener("load", function () {
                     </div>
 
                     <div class="pace-range">
-                        ${t?.cv_pace || "-"}
+                        ${t?.cv_min_pace || "-"}
                         -
-                        ${t?.vo2_pace || "-"}
+                        ${t?.cv_max_pace || "-"}
                     </div>
 
                     <div class="pace-unit">
@@ -344,9 +342,9 @@ window.addEventListener("load", function () {
                     </div>
 
                     <div class="pace-range">
-                        ${t?.vo2_pace || "-"}
+                        ${t?.vo2_min_pace || "-"}
                         -
-                        ${t?.vo2_pace || "-"}
+                        ${t?.vo2_max_pace || "-"}
                     </div>
 
                     <div class="pace-unit">
@@ -396,7 +394,7 @@ window.addEventListener("load", function () {
 
         <div class="card">
 
-            <h3>HISTORY</h3>
+            <h3>DEVELOPMENT</h3>
 
             <div class="course-layout">
 
