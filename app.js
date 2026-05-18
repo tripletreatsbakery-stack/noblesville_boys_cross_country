@@ -402,7 +402,7 @@ window.addEventListener("load", function () {
 
                 <div>
 
-                    <h4>Courses</h4>
+                    <h4>MEET PRs</h4>
 
                     <div class="course-grid">
                         ${courses}
@@ -412,7 +412,7 @@ window.addEventListener("load", function () {
 
                 <div>
 
-                    <h4>Progression</h4>
+                    <h4>YEARLY PRs</h4>
 
                     ${buildYearHTML(years)}
 
