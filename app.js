@@ -54,7 +54,9 @@ window.addEventListener("load", function () {
         });
     });
 
-    // ---------- helpers ----------
+    // =========================================
+    // HELPERS
+    // =========================================
 
     function getTraining(name) {
 
@@ -177,7 +179,9 @@ window.addEventListener("load", function () {
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    // ---------- render ----------
+    // =========================================
+    // RENDER
+    // =========================================
 
     function showAthlete(i) {
 
@@ -202,8 +206,13 @@ window.addEventListener("load", function () {
             </div>
 
             <div class="focus-block single-focus">
+
                 <label>TRAINING FOCUS</label>
-                <p>${formatLabel(t?.training_focus)}</p>
+
+                <p>
+                    ${formatLabel(t?.training_focus)}
+                </p>
+
             </div>
 
         </div>
@@ -212,60 +221,138 @@ window.addEventListener("load", function () {
 
             <h3>PACE ZONES</h3>
 
-            <div class="pace-grid-horizontal">
+            <div class="pace-scroll">
 
                 <div class="pace-card">
-                    <label>Recovery</label>
-                    <span>
+
+                    <div class="pace-title">
+                        RECOVERY
+                    </div>
+
+                    <div class="pace-icon">
+                        ↻
+                    </div>
+
+                    <div class="pace-range">
                         ${formatTime(t?.recovery_sec)}
                         -
                         ${t?.aerobic_easy_min_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
                 <div class="pace-card">
-                    <label>Aerobic Easy</label>
-                    <span>
+
+                    <div class="pace-title">
+                        AEROBIC EASY
+                    </div>
+
+                    <div class="pace-icon">
+                        ♡
+                    </div>
+
+                    <div class="pace-range">
                         ${t?.aerobic_easy_min_pace || "-"}
                         -
                         ${t?.aerobic_easy_max_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
                 <div class="pace-card">
-                    <label>Steady</label>
-                    <span>
+
+                    <div class="pace-title">
+                        STEADY
+                    </div>
+
+                    <div class="pace-icon">
+                        ∿
+                    </div>
+
+                    <div class="pace-range">
                         ${formatTime(t?.steady_sec)}
                         -
                         ${t?.threshold_min_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
                 <div class="pace-card">
-                    <label>Threshold</label>
-                    <span>
+
+                    <div class="pace-title">
+                        THRESHOLD
+                    </div>
+
+                    <div class="pace-icon">
+                        ◔
+                    </div>
+
+                    <div class="pace-range">
                         ${t?.threshold_min_pace || "-"}
                         -
                         ${t?.threshold_max_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
                 <div class="pace-card">
-                    <label>Critical Velocity</label>
-                    <span>
+
+                    <div class="pace-title">
+                        CRITICAL VELOCITY
+                    </div>
+
+                    <div class="pace-icon">
+                        ⚡
+                    </div>
+
+                    <div class="pace-range">
                         ${t?.cv_pace || "-"}
                         -
                         ${t?.vo2_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
                 <div class="pace-card">
-                    <label>VO2</label>
-                    <span>
+
+                    <div class="pace-title">
+                        VO2
+                    </div>
+
+                    <div class="pace-icon">
+                        ◉
+                    </div>
+
+                    <div class="pace-range">
                         ${t?.vo2_pace || "-"}
                         -
                         ${t?.vo2_pace || "-"}
-                    </span>
+                    </div>
+
+                    <div class="pace-unit">
+                        min/mi
+                    </div>
+
                 </div>
 
             </div>
