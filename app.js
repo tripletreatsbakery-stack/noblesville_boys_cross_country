@@ -10,19 +10,22 @@ window.addEventListener("load", function () {
 
     let physData = [];
     let prData = [];
+    let meetData = [];
     let yearData = [];
     let trainingData = [];
 
     Promise.all([
         fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
         fetch(base + "v_athlete_prs", { headers }).then(r => r.json()),
+        fetch(base + "v_active_athlete_prs_pivot", { headers }).then(r => r.json()),
         fetch(base + "v_athlete_5k_years_wide", { headers }).then(r => r.json()),
         fetch(base + "v_athlete_pace_bands_v2", { headers }).then(r => r.json())
     ])
-    .then(([phys, prs, years, training]) => {
+    .then(([phys, prs, meets, years, training]) => {
 
         physData = phys;
         prData = prs || [];
+        meetData = meets || [];
         yearData = years || [];
         trainingData = training || [];
 
@@ -68,6 +71,13 @@ window.addEventListener("load", function () {
     function getPRs(id) {
 
         return prData.find(r =>
+            r.athlete_id === id
+        );
+    }
+
+    function getMeetPRs(id) {
+
+        return meetData.find(r =>
             r.athlete_id === id
         );
     }
@@ -193,6 +203,8 @@ window.addEventListener("load", function () {
         const a = physData[i];
 
         const prs = getPRs(a.athlete_id);
+
+        const meetPRs = getMeetPRs(a.athlete_id);
 
         const t = getTraining(a.full_name);
 
@@ -450,18 +462,16 @@ window.addEventListener("load", function () {
 
                     <div class="course-grid">
 
-                        ${Object.entries(prs || {})
+                        ${Object.entries(meetPRs || {})
                             .filter(([k, v]) =>
-                                k.startsWith("meet_") &&
+                                k !== "athlete_id" &&
+                                k !== "full_name" &&
                                 v
                             )
                             .map(([k, v]) => `
                                 <div class="course-item">
                                     <label>
-                                        ${k
-                                            .replace("meet_", "")
-                                            .replace(/_/g, " ")
-                                        }
+                                        ${k.replace(/_/g, " ")}
                                     </label>
                                     <span>${v}</span>
                                 </div>
