@@ -440,20 +440,17 @@ h2 {
     border-color: rgba(212,175,55,0.4);
 
     background: rgba(212,175,55,0.04);
-}
-.pace-zone {
+}.pace-zone {
 
-    font-size: 10px;
+    font-size: 24px;
 
-    font-weight: 800;
+    font-weight: 900;
 
     letter-spacing: 1px;
 
-    text-transform: uppercase;
-
     color: var(--gold);
 
-    opacity: 0.8;
+    line-height: 1;
 
     margin-bottom: 8px;
 }
@@ -462,13 +459,15 @@ h2 {
 
     font-size: 11px;
 
-    color: #bbb;
+    color: #999;
 
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
 
-    font-weight: bold;
+    text-transform: uppercase;
 
-    margin-bottom: 28px;
+    font-weight: 700;
+
+    margin-bottom: 24px;
 }
 
 .pace-icon {
