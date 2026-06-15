@@ -230,149 +230,171 @@ window.addEventListener("load", function () {
 
         </div>
 
-        <div class="card pace-zones-card">
+<div class="card pace-zones-card">
 
-            <h3>PACE ZONES</h3>
+    <h3>PACE ZONES</h3>
 
-            <div class="pace-scroll">
+    <div class="pace-scroll">
 
-                <div class="pace-card">
+        <div class="pace-card">
 
-                    <div class="pace-title">
-                        RECOVERY
-                    </div>
+            <div class="pace-zone">
+                ZONE 1
+            </div>
 
-                    <div class="pace-icon">
-                        ↻
-                    </div>
+            <div class="pace-title">
+                RECOVERY
+            </div>
 
-                    <div class="pace-range">
-                        ${t?.recovery_min_pace || "-"}
-                        -
-                        ${t?.recovery_max_pace || "-"}
-                    </div>
+            <div class="pace-icon">
+                ↻
+            </div>
 
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
+            <div class="pace-range">
+                ${t?.recovery_min_pace || "-"}
+                -
+                ${t?.recovery_max_pace || "-"}
+            </div>
 
-                </div>
-
-                <div class="pace-card">
-
-                    <div class="pace-title">
-                        AEROBIC EASY
-                    </div>
-
-                    <div class="pace-icon">
-                        ♡
-                    </div>
-
-                    <div class="pace-range">
-                        ${t?.aerobic_easy_min_pace || "-"}
-                        -
-                        ${t?.aerobic_easy_max_pace || "-"}
-                    </div>
-
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
-
-                </div>
-
-                <div class="pace-card">
-
-                    <div class="pace-title">
-                        STEADY
-                    </div>
-
-                    <div class="pace-icon">
-                        ∿
-                    </div>
-
-                    <div class="pace-range">
-                        ${t?.steady_min_pace || "-"}
-                        -
-                        ${t?.steady_max_pace || "-"}
-                        
-                    </div>
-
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
-
-                </div>
-
-                <div class="pace-card">
-
-                    <div class="pace-title">
-                        THRESHOLD
-                    </div>
-
-                    <div class="pace-icon">
-                        ◔
-                    </div>
-
-                    <div class="pace-range">
-                        ${t?.threshold_min_pace || "-"}
-                        -
-                        ${t?.threshold_max_pace || "-"}
-                    </div>
-
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
-
-                </div>
-
-                <div class="pace-card">
-
-                    <div class="pace-title">
-                        CRITICAL VELOCITY
-                    </div>
-
-                    <div class="pace-icon">
-                        ⚡
-                    </div>
-
-                    <div class="pace-range">
-                        ${t?.cv_min_pace || "-"}
-                        -
-                        ${t?.cv_max_pace || "-"}
-                    </div>
-
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
-
-                </div>
-
-                <div class="pace-card">
-
-                    <div class="pace-title">
-                        VO2
-                    </div>
-
-                    <div class="pace-icon">
-                        ◉
-                    </div>
-
-                    <div class="pace-range">
-                        ${t?.vo2_min_pace || "-"}
-                        -
-                        ${t?.vo2_max_pace || "-"}
-                    </div>
-
-                    <div class="pace-unit">
-                        min/mi
-                    </div>
-
-                </div>
-
+            <div class="pace-unit">
+                min/mi
             </div>
 
         </div>
 
+        <div class="pace-card">
+
+            <div class="pace-zone">
+                ZONE 2
+            </div>
+
+            <div class="pace-title">
+                AEROBIC EASY
+            </div>
+
+            <div class="pace-icon">
+                ♡
+            </div>
+
+            <div class="pace-range">
+                ${t?.aerobic_easy_min_pace || "-"}
+                -
+                ${t?.aerobic_easy_max_pace || "-"}
+            </div>
+
+            <div class="pace-unit">
+                min/mi
+            </div>
+
+        </div>
+
+        <div class="pace-card">
+
+            <div class="pace-zone">
+                ZONE 3
+            </div>
+
+            <div class="pace-title">
+                STEADY
+            </div>
+
+            <div class="pace-icon">
+                ∿
+            </div>
+
+            <div class="pace-range">
+                ${t?.steady_min_pace || "-"}
+                -
+                ${t?.steady_max_pace || "-"}
+            </div>
+
+            <div class="pace-unit">
+                min/mi
+            </div>
+
+        </div>
+
+        <div class="pace-card">
+
+            <div class="pace-zone">
+                ZONE 4
+            </div>
+
+            <div class="pace-title">
+                THRESHOLD
+            </div>
+
+            <div class="pace-icon">
+                ◔
+            </div>
+
+            <div class="pace-range">
+                ${t?.threshold_min_pace || "-"}
+                -
+                ${t?.threshold_max_pace || "-"}
+            </div>
+
+            <div class="pace-unit">
+                min/mi
+            </div>
+
+        </div>
+
+        <div class="pace-card">
+
+            <div class="pace-zone">
+                ZONE 5
+            </div>
+
+            <div class="pace-title">
+                CV
+            </div>
+
+            <div class="pace-icon">
+                ⚡
+            </div>
+
+            <div class="pace-range">
+                ${t?.cv_min_pace || "-"}
+                -
+                ${t?.cv_max_pace || "-"}
+            </div>
+
+            <div class="pace-unit">
+                min/mi
+            </div>
+
+        </div>
+
+        <div class="pace-card">
+
+            <div class="pace-zone">
+                ZONE 5
+            </div>
+
+            <div class="pace-title">
+                VO2
+            </div>
+
+            <div class="pace-icon">
+                ◉
+            </div>
+
+            <div class="pace-range">
+                ${t?.vo2_min_pace || "-"}
+                -
+                ${t?.vo2_max_pace || "-"}
+            </div>
+
+            <div class="pace-unit">
+                min/mi
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
         <div class="card">
 
             <h3>PRs</h3>
