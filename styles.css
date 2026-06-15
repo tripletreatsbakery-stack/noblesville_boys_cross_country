@@ -441,6 +441,22 @@ h2 {
 
     background: rgba(212,175,55,0.04);
 }
+.pace-zone {
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    color: var(--gold);
+
+    opacity: 0.8;
+
+    margin-bottom: 8px;
+}
 
 .pace-title {
 
