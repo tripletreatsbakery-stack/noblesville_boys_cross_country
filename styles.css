@@ -412,6 +412,10 @@ h2 {
 
     height: 270px;
 
+    padding: 28px 12px 22px;
+
+    box-sizing: border-box;
+
     background: rgba(255,255,255,0.02);
 
     border: 1px solid rgba(212,175,55,0.10);
@@ -422,7 +426,7 @@ h2 {
 
     flex-direction: column;
 
-    justify-content: center;
+    justify-content: flex-start;
 
     align-items: center;
 
@@ -553,10 +557,11 @@ h4 {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .pace-card {
-        min-width: 150px;
-        height: 250px;
-    }
+   .pace-card {
+       min-width: 150px;
+       height: 250px;
+       padding: 26px 10px 20px;
+   }
 
     .pace-range {
         font-size: 16px;
