@@ -410,7 +410,7 @@ h2 {
 
     min-width: 170px;
 
-    height: 270px;
+    height: 240px;
 
     padding: 28px 12px 22px;
 
@@ -465,9 +465,9 @@ h2 {
 
     padding-top: 16px;
 
-    font-size: 10px;
+    font-size: 9px;
 
-    color: #888;
+    color: #666;
 
     letter-spacing: 1px;
 
@@ -482,12 +482,12 @@ h2 {
 
     color: var(--gold);
 
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 .pace-range {
 
-    font-size: 18px;
+    font-size: 22px;
 
     font-weight: bold;
 
@@ -506,15 +506,7 @@ h2 {
 }
 .pace-effort {
 
-    margin-top: 12px;
-
-    height: 34px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
+    margin-top: 10px;
 
     font-size: 12px;
 
@@ -528,6 +520,7 @@ h2 {
 
     max-width: 120px;
 }
+
 /* ========================================= */
 /* HEADERS */
 /* ========================================= */
