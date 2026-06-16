@@ -461,7 +461,9 @@ h2 {
 
 .pace-title {
 
-    margin-top: 16px;
+    margin-top: auto;
+
+    padding-top: 16px;
 
     font-size: 10px;
 
@@ -473,6 +475,7 @@ h2 {
 
     font-weight: 700;
 }
+
 .pace-icon {
 
     font-size: 42px;
