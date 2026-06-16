@@ -241,10 +241,6 @@ window.addEventListener("load", function () {
                 ZONE 1
             </div>
 
-            <div class="pace-title">
-                RECOVERY
-            </div>
-
             <div class="pace-icon">
                 ↻
             </div>
@@ -263,16 +259,16 @@ window.addEventListener("load", function () {
                 Full conversation
             </div>
 
+            <div class="pace-title">
+                RECOVERY
+            </div>
+
         </div>
 
         <div class="pace-card">
 
             <div class="pace-zone">
                 ZONE 2
-            </div>
-
-            <div class="pace-title">
-                AEROBIC EASY
             </div>
 
             <div class="pace-icon">
@@ -293,16 +289,16 @@ window.addEventListener("load", function () {
                 Comfortable conversation
             </div>
 
+            <div class="pace-title">
+                AEROBIC EASY
+            </div>
+
         </div>
 
         <div class="pace-card">
 
             <div class="pace-zone">
                 ZONE 3
-            </div>
-
-            <div class="pace-title">
-                STEADY
             </div>
 
             <div class="pace-icon">
@@ -323,16 +319,16 @@ window.addEventListener("load", function () {
                 Short sentences
             </div>
 
+            <div class="pace-title">
+                STEADY
+            </div>
+
         </div>
 
         <div class="pace-card">
 
             <div class="pace-zone">
                 ZONE 4
-            </div>
-
-            <div class="pace-title">
-                THRESHOLD
             </div>
 
             <div class="pace-icon">
@@ -353,16 +349,16 @@ window.addEventListener("load", function () {
                 3-5 words
             </div>
 
+            <div class="pace-title">
+                THRESHOLD
+            </div>
+
         </div>
 
         <div class="pace-card">
 
             <div class="pace-zone">
                 ZONE 5
-            </div>
-
-            <div class="pace-title">
-                CV
             </div>
 
             <div class="pace-icon">
@@ -383,16 +379,16 @@ window.addEventListener("load", function () {
                 Single words only
             </div>
 
+            <div class="pace-title">
+                CV
+            </div>
+
         </div>
 
         <div class="pace-card">
 
             <div class="pace-zone">
                 ZONE 5
-            </div>
-
-            <div class="pace-title">
-                VO2
             </div>
 
             <div class="pace-icon">
@@ -413,10 +409,15 @@ window.addEventListener("load", function () {
                 No talking
             </div>
 
+            <div class="pace-title">
+                VO2
+            </div>
+
         </div>
 
     </div>
 
+</div>
 </div>
         <div class="card">
 
