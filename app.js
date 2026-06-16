@@ -229,7 +229,6 @@ window.addEventListener("load", function () {
             </div>
 
         </div>
-
 <div class="card pace-zones-card">
 
     <h3>PACE ZONES</h3>
@@ -260,6 +259,10 @@ window.addEventListener("load", function () {
                 min/mi
             </div>
 
+            <div class="pace-effort">
+                Full conversation
+            </div>
+
         </div>
 
         <div class="pace-card">
@@ -284,6 +287,10 @@ window.addEventListener("load", function () {
 
             <div class="pace-unit">
                 min/mi
+            </div>
+
+            <div class="pace-effort">
+                Comfortable conversation
             </div>
 
         </div>
@@ -312,6 +319,10 @@ window.addEventListener("load", function () {
                 min/mi
             </div>
 
+            <div class="pace-effort">
+                Short sentences
+            </div>
+
         </div>
 
         <div class="pace-card">
@@ -336,6 +347,10 @@ window.addEventListener("load", function () {
 
             <div class="pace-unit">
                 min/mi
+            </div>
+
+            <div class="pace-effort">
+                3-5 words
             </div>
 
         </div>
@@ -364,6 +379,10 @@ window.addEventListener("load", function () {
                 min/mi
             </div>
 
+            <div class="pace-effort">
+                Single words only
+            </div>
+
         </div>
 
         <div class="pace-card">
@@ -388,6 +407,10 @@ window.addEventListener("load", function () {
 
             <div class="pace-unit">
                 min/mi
+            </div>
+
+            <div class="pace-effort">
+                No talking
             </div>
 
         </div>
