@@ -408,6 +408,8 @@ h2 {
 
 .pace-card {
 
+    position: relative;
+
     min-width: 170px;
 
     height: 240px;
@@ -461,13 +463,17 @@ h2 {
 
 .pace-title {
 
-    margin-top: auto;
+    position: absolute;
 
-    padding-top: 16px;
+    bottom: 22px;
 
-    font-size: 9px;
+    left: 0;
 
-    color: #666;
+    width: 100%;
+
+    font-size: 10px;
+
+    color: #888;
 
     letter-spacing: 1px;
 
@@ -506,7 +512,7 @@ h2 {
 }
 .pace-effort {
 
-    margin-top: 10px;
+    margin-top: 12px;
 
     font-size: 12px;
 
