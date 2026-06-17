@@ -286,7 +286,7 @@ window.addEventListener("load", function () {
             </div>
 
             <div class="pace-effort">
-                Comfortable conversation
+                Easy conversation
             </div>
 
             <div class="pace-title">
