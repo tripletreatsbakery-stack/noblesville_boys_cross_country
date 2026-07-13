@@ -307,7 +307,7 @@ const splits = calculateGoalSplits(minutes, seconds);
 
     <div class="card goal-pace-card">
 
-        <h3>GOAL PACE</h3>
+        <h3>TARGET SPLITS</h3>
 
         <div id="goalPaceResults">
 
@@ -316,7 +316,7 @@ const splits = calculateGoalSplits(minutes, seconds);
                 <div class="goal-column">
 
                     <div class="goal-heading">
-                        Goal Time
+                        Time
                     </div>
 
                     <div class="goal-picker">
