@@ -602,9 +602,9 @@ h4 {
 
     display: grid;
 
-    grid-template-columns: 180px 1fr 1fr;
+    grid-template-columns: 220px 1fr 1fr;
 
-    gap: 34px;
+    gap: 30px;
 
     margin-top: 20px;
 
@@ -614,9 +614,7 @@ h4 {
 
 .goal-column {
 
-    display: flex;
-
-    flex-direction: column;
+    min-width: 0;
 
 }
 
@@ -636,33 +634,29 @@ h4 {
 
 .goal-picker {
 
-    width: 190px;
-
-    margin: 0 auto;
-
     display: flex;
 
     justify-content: center;
 
     align-items: center;
 
-    gap: 12px;
+    gap: 10px;
+
+    width: 100%;
 
 }
 
 .goal-picker select {
 
-    width: 82px;
+    width: 96px;
 
-    height: 84px;
+    height: 78px;
 
-    font-size: 30px;
+    box-sizing: border-box;
 
-    font-weight: 800;
+    padding: 0 28px 0 10px;
 
-    text-align: center;
-
-    background: var(--panel);
+    background-color: var(--panel);
 
     color: white;
 
@@ -670,15 +664,27 @@ h4 {
 
     border-radius: 12px;
 
+    font-size: 28px;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    text-align: center;
+
+    text-align-last: center;
+
 }
 
 .goal-colon {
 
-    font-size: 42px;
-
-    font-weight: 900;
+    flex: 0 0 auto;
 
     color: var(--gold);
+
+    font-size: 40px;
+
+    font-weight: 900;
 
     line-height: 1;
 
@@ -688,17 +694,21 @@ h4 {
 
     display: grid;
 
-    grid-template-columns: 34px 58px;
+    grid-template-columns: 40px 72px;
 
-    justify-content: center;
-
-    column-gap: 18px;
+    column-gap: 14px;
 
     align-items: center;
 
+    width: 126px;
+
+    margin: 0 auto;
+
     padding: 10px 0;
 
-    border-bottom: 1px solid rgba(255,255,255,.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    font-size: 18px;
 
 }
 
@@ -719,5 +729,41 @@ h4 {
     font-weight: 800;
 
     text-align: right;
+
+    white-space: nowrap;
+
+}
+
+/* ========================================= */
+/* TARGET SPLITS - MOBILE */
+/* ========================================= */
+
+@media (max-width: 700px) {
+
+    .goal-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 28px;
+
+    }
+
+    .goal-picker select {
+
+        width: 100px;
+
+        height: 76px;
+
+        font-size: 28px;
+
+    }
+
+    .goal-row {
+
+        width: 140px;
+
+        grid-template-columns: 40px 78px;
+
+    }
 
 }
