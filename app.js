@@ -194,9 +194,9 @@ window.addEventListener("load", function () {
         `;
     }
 
-    function buildGoalPaceHTML(pr5000) {
+function buildGoalPaceHTML(pr5000) {
 
-    let minutes = 20;
+    let minutes = 18;
     let seconds = 0;
 
     if (pr5000) {
@@ -230,7 +230,7 @@ window.addEventListener("load", function () {
 
         secondOptions.push(`
             <option value="${i}" ${i === seconds ? "selected" : ""}>
-                ${String(i).padStart(2,"0")}
+                ${String(i).padStart(2, "0")}
             </option>
         `);
     }
@@ -241,27 +241,59 @@ window.addEventListener("load", function () {
 
         <h3>GOAL PACE</h3>
 
-        <div class="goal-time-label">
-            Goal 5K Time
-        </div>
-
-        <div class="goal-picker">
-
-            <select id="goalMinutes">
-                ${minuteOptions.join("")}
-            </select>
-
-            <div class="goal-colon">:</div>
-
-            <select id="goalSeconds">
-                ${secondOptions.join("")}
-            </select>
-
-        </div>
-
         <div id="goalPaceResults">
 
-            Coming next...
+            <div class="goal-grid">
+
+                <div class="goal-column">
+
+                    <div class="goal-heading">
+                        Goal Time
+                    </div>
+
+                    <div class="goal-picker">
+
+                        <select id="goalMinutes">
+                            ${minuteOptions.join("")}
+                        </select>
+
+                        <div class="goal-colon">:</div>
+
+                        <select id="goalSeconds">
+                            ${secondOptions.join("")}
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="goal-column">
+
+                    <div class="goal-heading">
+                        Kilometers
+                    </div>
+
+                    <div class="goal-row"><span>1K</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>2K</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>3K</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>4K</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>5K</span><strong>--:--</strong></div>
+
+                </div>
+
+                <div class="goal-column">
+
+                    <div class="goal-heading">
+                        Miles
+                    </div>
+
+                    <div class="goal-row"><span>1M</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>2M</span><strong>--:--</strong></div>
+                    <div class="goal-row"><span>3M</span><strong>--:--</strong></div>
+
+                </div>
+
+            </div>
 
         </div>
 
