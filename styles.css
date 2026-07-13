@@ -602,9 +602,9 @@ h4 {
 
     display: grid;
 
-    grid-template-columns: 200px 180px 180px;
+    grid-template-columns: 150px 1fr 1fr;
 
-    gap: 24px;
+    gap: 40px;
 
     margin-top: 20px;
 
@@ -612,14 +612,19 @@ h4 {
 
 }
 
-.goal-column {
+.goal-colon {
 
-    display: flex;
+    font-size: 44px;
 
-    flex-direction: column;
+    color: var(--gold);
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    margin-top: -4px;
 
 }
-
 .goal-heading {
 
     color: var(--gold);
@@ -648,7 +653,7 @@ h4 {
 
 .goal-picker select {
 
-    width: 80px;
+    width: 72px;
 
     font-size: 34px;
 
