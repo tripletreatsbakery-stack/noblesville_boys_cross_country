@@ -595,7 +595,7 @@ h4 {
     }
 }
 /* ========================================= */
-/* GOAL PACE */
+/* TARGET SPLITS */
 /* ========================================= */
 
 .goal-grid {
@@ -612,19 +612,14 @@ h4 {
 
 }
 
-.goal-colon {
+.goal-column {
 
-    font-size: 44px;
+    display: flex;
 
-    color: var(--gold);
-
-    font-weight: 900;
-
-    line-height: 1;
-
-    margin-top: -4px;
+    flex-direction: column;
 
 }
+
 .goal-heading {
 
     color: var(--gold);
@@ -655,21 +650,35 @@ h4 {
 
     width: 72px;
 
+    height: 78px;
+
     font-size: 34px;
 
     font-weight: 800;
 
     text-align: center;
 
+    background: var(--panel);
+
+    color: white;
+
+    border: 1px solid var(--gold);
+
+    border-radius: 12px;
+
 }
 
 .goal-colon {
 
-    font-size: 38px;
+    font-size: 44px;
+
+    font-weight: 900;
 
     color: var(--gold);
 
-    font-weight: 800;
+    line-height: 1;
+
+    margin-top: -4px;
 
 }
 
@@ -681,7 +690,7 @@ h4 {
 
     gap: 18px;
 
-    padding: 8px 0;
+    padding: 10px 0;
 
     font-size: 18px;
 
@@ -691,11 +700,11 @@ h4 {
 
 .goal-row span {
 
-    width: 36px;
-
-    font-weight: 700;
+    width: 34px;
 
     color: white;
+
+    font-weight: 700;
 
     text-align: left;
 
@@ -707,6 +716,8 @@ h4 {
 
     font-weight: 800;
 
-    text-align: left;
+    min-width: 54px;
+
+    text-align: right;
 
 }
