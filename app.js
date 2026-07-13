@@ -194,6 +194,81 @@ window.addEventListener("load", function () {
         `;
     }
 
+    function buildGoalPaceHTML(pr5000) {
+
+    let minutes = 20;
+    let seconds = 0;
+
+    if (pr5000) {
+
+        const parts = pr5000.split(":");
+
+        minutes = parseInt(parts[0]);
+
+        seconds = Math.round(parseFloat(parts[1]));
+
+        if (seconds === 60) {
+            minutes++;
+            seconds = 0;
+        }
+    }
+
+    const minuteOptions = [];
+
+    for (let i = 14; i <= 30; i++) {
+
+        minuteOptions.push(`
+            <option value="${i}" ${i === minutes ? "selected" : ""}>
+                ${i}
+            </option>
+        `);
+    }
+
+    const secondOptions = [];
+
+    for (let i = 0; i < 60; i++) {
+
+        secondOptions.push(`
+            <option value="${i}" ${i === seconds ? "selected" : ""}>
+                ${String(i).padStart(2,"0")}
+            </option>
+        `);
+    }
+
+    return `
+
+    <div class="card goal-pace-card">
+
+        <h3>GOAL PACE</h3>
+
+        <div class="goal-time-label">
+            Goal 5K Time
+        </div>
+
+        <div class="goal-picker">
+
+            <select id="goalMinutes">
+                ${minuteOptions.join("")}
+            </select>
+
+            <div class="goal-colon">:</div>
+
+            <select id="goalSeconds">
+                ${secondOptions.join("")}
+            </select>
+
+        </div>
+
+        <div id="goalPaceResults">
+
+            Coming next...
+
+        </div>
+
+    </div>
+
+    `;
+}
     // =========================================
     // RENDER
     // =========================================
@@ -419,6 +494,7 @@ window.addEventListener("load", function () {
 
 </div>
 </div>
+${buildGoalPaceHTML(prs?.pr_5000_raw)}
         <div class="card">
 
             <h3>PRs</h3>
