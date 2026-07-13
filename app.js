@@ -193,7 +193,40 @@ window.addEventListener("load", function () {
             ${imp ? `<div class="improvement">↓ ${imp} since freshman</div>` : ""}
         `;
     }
+function formatTime(totalSeconds) {
 
+    const minutes = Math.floor(totalSeconds / 60);
+
+    const seconds = Math.round(totalSeconds % 60);
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function calculateGoalSplits(minutes, seconds) {
+
+    const totalSeconds = minutes * 60 + seconds;
+
+    const perKm = totalSeconds / 5;
+
+    const perMile = totalSeconds / 3.10686;
+
+    return {
+
+        km: [
+            formatTime(perKm),
+            formatTime(perKm * 2),
+            formatTime(perKm * 3),
+            formatTime(perKm * 4),
+            formatTime(totalSeconds)
+        ],
+
+        mile: [
+            formatTime(perMile),
+            formatTime(perMile * 2),
+            formatTime(perMile * 3)
+        ]
+    };
+}
 function buildGoalPaceHTML(pr5000) {
 
     let minutes = 18;
@@ -234,7 +267,7 @@ function buildGoalPaceHTML(pr5000) {
             </option>
         `);
     }
-
+const splits = calculateGoalSplits(minutes, seconds);
     return `
 
     <div class="card goal-pace-card">
@@ -272,13 +305,12 @@ function buildGoalPaceHTML(pr5000) {
                     <div class="goal-heading">
                         Kilometers
                     </div>
-
-                    <div class="goal-row"><span>1K</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>2K</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>3K</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>4K</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>5K</span><strong>--:--</strong></div>
-
+                    <div class="goal-row"><span>1K</span><strong>${splits.km[0]}</strong></div>
+                    <div class="goal-row"><span>2K</span><strong>${splits.km[1]}</strong></div>
+                    <div class="goal-row"><span>3K</span><strong>${splits.km[2]}</strong></div>
+                    <div class="goal-row"><span>4K</span><strong>${splits.km[3]}</strong></div>
+                    <div class="goal-row"><span>5K</span><strong>${splits.km[4]}</strong></div>
+                    
                 </div>
 
                 <div class="goal-column">
@@ -286,11 +318,10 @@ function buildGoalPaceHTML(pr5000) {
                     <div class="goal-heading">
                         Miles
                     </div>
-
-                    <div class="goal-row"><span>1M</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>2M</span><strong>--:--</strong></div>
-                    <div class="goal-row"><span>3M</span><strong>--:--</strong></div>
-
+                    <div class="goal-row"><span>1M</span><strong>${splits.mile[0]}</strong></div>
+                    <div class="goal-row"><span>2M</span><strong>${splits.mile[1]}</strong></div>
+                    <div class="goal-row"><span>3M</span><strong>${splits.mile[2]}</strong></div>
+    
                 </div>
 
             </div>
