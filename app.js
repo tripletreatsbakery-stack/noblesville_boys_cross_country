@@ -494,151 +494,131 @@ window.addEventListener("load", function () {
 
 </div>
 </div>
-function buildGoalPaceHTML(pr5000) {
+${buildGoalPaceHTML(prs?.pr_5000_raw)}
+        <div class="card">
 
-    let minutes = 18;
-    let seconds = 0;
+            <h3>PRs</h3>
 
-    if (pr5000) {
+            <div class="pr-grid">
 
-        const parts = pr5000.split(":");
+                <div>
 
-        minutes = parseInt(parts[0]);
+                    <label>800</label>
 
-        seconds = Math.round(parseFloat(parts[1]));
+                    <span>
+                        ${prs?.pr_800_raw || "-"}
+                    </span>
 
-        if (seconds === 60) {
-            minutes++;
-            seconds = 0;
-        }
-    }
+                    <div class="pr-date">
+                        ${prs?.pr_800_date || ""}
+                    </div>
 
-    const minuteOptions = [];
-
-    for (let i = 14; i <= 30; i++) {
-
-        minuteOptions.push(`
-            <option value="${i}" ${i === minutes ? "selected" : ""}>
-                ${i}
-            </option>
-        `);
-    }
-
-    const secondOptions = [];
-
-    for (let i = 0; i < 60; i++) {
-
-        secondOptions.push(`
-            <option value="${i}" ${i === seconds ? "selected" : ""}>
-                ${String(i).padStart(2,"0")}
-            </option>
-        `);
-    }
-
-    const totalSeconds = minutes * 60 + seconds;
-
-    function pace(secPerDistance) {
-
-        const m = Math.floor(secPerDistance / 60);
-
-        const s = Math.round(secPerDistance % 60)
-            .toString()
-            .padStart(2, "0");
-
-        return `${m}:${s}`;
-    }
-
-    const perKm = totalSeconds / 5;
-
-    const perMile = totalSeconds / 3.10686;
-
-    return `
-
-    <div class="card goal-pace-card">
-
-        <h3>GOAL PACE</h3>
-
-        <div class="goal-time-label">
-            Goal 5K Time
-        </div>
-
-        <div class="goal-picker">
-
-            <select id="goalMinutes">
-                ${minuteOptions.join("")}
-            </select>
-
-            <div class="goal-colon">:</div>
-
-            <select id="goalSeconds">
-                ${secondOptions.join("")}
-            </select>
-
-        </div>
-
-        <div id="goalPaceResults">
-
-            <div class="goal-results">
-
-                <div class="goal-result-row">
-                    <span>Per Mile</span>
-                    <strong>${pace(perMile)}</strong>
                 </div>
 
-                <div class="goal-result-row">
-                    <span>Per Kilometer</span>
-                    <strong>${pace(perKm)}</strong>
+                <div>
+
+                    <label>1600</label>
+
+                    <span>
+                        ${prs?.pr_1600_raw || "-"}
+                    </span>
+
+                    <div class="pr-date">
+                        ${prs?.pr_1600_date || ""}
+                    </div>
+
                 </div>
 
-                <hr>
+                <div>
 
-                <div class="goal-result-row">
-                    <span>1K</span>
-                    <strong>${pace(perKm)}</strong>
+                    <label>3200</label>
+
+                    <span>
+                        ${prs?.pr_3200_raw || "-"}
+                    </span>
+
+                    <div class="pr-date">
+                        ${prs?.pr_3200_date || ""}
+                    </div>
+
                 </div>
 
-                <div class="goal-result-row">
-                    <span>2K</span>
-                    <strong>${pace(perKm * 2)}</strong>
+                <div>
+
+                    <label>4000</label>
+
+                    <span>
+                        ${prs?.pr_4000_raw || "-"}
+                    </span>
+
+                    <div class="pr-date">
+                        ${prs?.pr_4000_date || ""}
+                    </div>
+
                 </div>
 
-                <div class="goal-result-row">
-                    <span>3K</span>
-                    <strong>${pace(perKm * 3)}</strong>
-                </div>
+                <div>
 
-                <div class="goal-result-row">
-                    <span>4K</span>
-                    <strong>${pace(perKm * 4)}</strong>
-                </div>
+                    <label>5000</label>
 
-                <div class="goal-result-row">
-                    <span>5K</span>
-                    <strong>${pace(totalSeconds)}</strong>
-                </div>
+                    <span>
+                        ${prs?.pr_5000_raw || "-"}
+                    </span>
 
-                <hr>
+                    <div class="pr-date">
+                        ${prs?.pr_5000_date || ""}
+                    </div>
 
-                <div class="goal-result-row">
-                    <span>1 Mile</span>
-                    <strong>${pace(perMile)}</strong>
-                </div>
-
-                <div class="goal-result-row">
-                    <span>2 Mile</span>
-                    <strong>${pace(perMile * 2)}</strong>
-                </div>
-
-                <div class="goal-result-row">
-                    <span>3 Mile</span>
-                    <strong>${pace(perMile * 3)}</strong>
                 </div>
 
             </div>
 
         </div>
 
-    </div>
+        <div class="card">
 
-    `;
-}
+            <h3>DEVELOPMENT</h3>
+
+            <div class="course-layout">
+
+                <div>
+
+                    <h4>MEET PRs</h4>
+
+                    <div class="course-grid">
+
+                        ${Object.entries(meetPRs || {})
+                            .filter(([k, v]) =>
+                                k !== "athlete_id" &&
+                                k !== "full_name" &&
+                                v
+                            )
+                            .map(([k, v]) => `
+                                <div class="course-item">
+                                    <label>
+                                        ${k.replace(/_/g, " ")}
+                                    </label>
+                                    <span>${v}</span>
+                                </div>
+                            `)
+                            .join("")}
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <h4>YEARLY PRs</h4>
+
+                    ${buildYearHTML(years)}
+
+                </div>
+
+            </div>
+
+        </div>
+        `;
+    }
+
+});
