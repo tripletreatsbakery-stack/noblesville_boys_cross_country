@@ -195,13 +195,17 @@ window.addEventListener("load", function () {
     }
 function formatTime(totalSeconds) {
 
-    const minutes = Math.floor(totalSeconds / 60);
+    let minutes = Math.floor(totalSeconds / 60);
 
-    const seconds = Math.round(totalSeconds % 60);
+    let seconds = Math.round(totalSeconds % 60);
+
+    if (seconds === 60) {
+        minutes++;
+        seconds = 0;
+    }
 
     return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
-
 function calculateGoalSplits(minutes, seconds) {
 
     const totalSeconds = minutes * 60 + seconds;
@@ -227,7 +231,38 @@ function calculateGoalSplits(minutes, seconds) {
         ]
     };
 }
-function buildGoalPaceHTML(pr5000) {
+function updateGoalPace() {
+
+    const minutes = parseInt(
+        document.getElementById("goalMinutes").value
+    );
+
+    const seconds = parseInt(
+        document.getElementById("goalSeconds").value
+    );
+
+    const splits = calculateGoalSplits(minutes, seconds);
+
+    const kmRows = document.querySelectorAll(
+        ".goal-column:nth-child(2) .goal-row strong"
+    );
+
+    kmRows[0].textContent = splits.km[0];
+    kmRows[1].textContent = splits.km[1];
+    kmRows[2].textContent = splits.km[2];
+    kmRows[3].textContent = splits.km[3];
+    kmRows[4].textContent = splits.km[4];
+
+    const mileRows = document.querySelectorAll(
+        ".goal-column:nth-child(3) .goal-row strong"
+    );
+
+    mileRows[0].textContent = splits.mile[0];
+    mileRows[1].textContent = splits.mile[1];
+    mileRows[2].textContent = splits.mile[2];
+
+}
+    function buildGoalPaceHTML(pr5000) {
 
     let minutes = 18;
     let seconds = 0;
@@ -682,6 +717,15 @@ ${buildGoalPaceHTML(prs?.pr_5000_raw)}
 
         </div>
         `;
+
+        document
+            .getElementById("goalMinutes")
+            ?.addEventListener("change", updateGoalPace);
+
+        document
+            .getElementById("goalSeconds")
+            ?.addEventListener("change", updateGoalPace);
+
     }
 
 });
