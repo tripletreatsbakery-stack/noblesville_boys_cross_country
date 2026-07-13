@@ -657,3 +657,38 @@ h4 {
     font-size: 18px;
 
 }
+.goal-results {
+
+    max-width: 340px;
+
+    margin: 0 auto;
+
+}
+
+.goal-result-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    font-size: 18px;
+
+}
+
+.goal-result-row strong {
+
+    color: var(--gold);
+
+}
+
+.goal-results hr {
+
+    border: none;
+
+    border-top: 1px solid rgba(212,175,55,.25);
+
+    margin: 16px 0;
+
+}
