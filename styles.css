@@ -594,3 +594,66 @@ h4 {
         font-size: 22px;
     }
 }
+/* ========================================= */
+/* GOAL PACE */
+/* ========================================= */
+
+.goal-pace-card {
+
+    text-align: center;
+
+}
+
+.goal-time-label {
+
+    font-size: 16px;
+
+    color: #bbb;
+
+    margin-bottom: 18px;
+
+}
+
+.goal-picker {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+
+}
+
+.goal-picker select {
+
+    width: 110px;
+
+    font-size: 36px;
+
+    font-weight: 800;
+
+    text-align: center;
+
+}
+
+.goal-colon {
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    color: var(--gold);
+
+}
+
+#goalPaceResults {
+
+    color: #aaa;
+
+    font-size: 18px;
+
+}
