@@ -647,14 +647,17 @@ h4 {
 }
 
 .goal-picker select {
-
     width: 96px;
 
     height: 78px;
 
     box-sizing: border-box;
 
-    padding: 0 28px 0 10px;
+    -webkit-appearance: none;
+
+    appearance: none;
+
+    padding: 0;
 
     background-color: var(--panel);
 
@@ -748,15 +751,7 @@ h4 {
 
     }
 
-    .goal-picker select {
-
-        width: 100px;
-
-        height: 76px;
-
-        font-size: 28px;
-
-    }
+    /* mobile: use base select sizing (no override) */
 
     .goal-row {
 
