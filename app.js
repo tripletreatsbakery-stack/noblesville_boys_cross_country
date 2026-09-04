@@ -593,6 +593,7 @@ const splits = calculateGoalSplits(minutes, seconds);
 </div>
 </div>
 ${buildGoalPaceHTML(prs?.pr_5000_raw)}
+${window.buildColumbusRacePlanHTML?.(a.full_name) || ""}
         <div class="card">
 
             <h3>PRs</h3>
