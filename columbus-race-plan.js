@@ -56,6 +56,25 @@
         "Zander Gruber": ["Graham Yarber", "Jackson Thomas / Tyler Hass / Graham Yarber / Maddox Uminski", "3000m", "Keep the group organized early then compete after 3K"]
     };
 
+    const talkToBlakeAthletes = new Set([
+        "banner barnes",
+        "isaiah vohs",
+        "jack rush",
+        "gavin flynn",
+        "matt huseman",
+        "cohen baumer",
+        "josh moller",
+        "parker applegate",
+        "kolten simpson",
+        "tyler stallings",
+        "john ensley",
+        "braune naville"
+    ]);
+
+    function normalizeName(value) {
+        return String(value || "").trim().replace(/\s+/g, " ").toLowerCase();
+    }
+
     function escapeHTML(value) {
         return String(value || "").replace(/[&<>"']/g, character => ({
             "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
@@ -73,15 +92,20 @@
                 <div class="columbus-plan-value">${escapeHTML(value) || "&mdash;"}</div>
             </div>`;
 
+        const fields = talkToBlakeAthletes.has(normalizeName(fullName))
+            ? field("Packmate", "Talk to Blake", "columbus-plan-solo")
+            : `
+                ${field("Anchor", anchor)}
+                ${field("Look for", packmates)}
+                ${field("Begin moving", beginMoving)}
+                ${field("Individual instruction", instruction, "columbus-plan-instruction")}`;
+
         return `
             <section class="card columbus-plan-card" aria-labelledby="columbus-plan-title">
                 <div class="columbus-plan-kicker">Columbus</div>
                 <h3 id="columbus-plan-title">RACE PLAN</h3>
                 <div class="columbus-plan-grid">
-                    ${field("Anchor", anchor)}
-                    ${field("Look for", packmates)}
-                    ${field("Begin moving", beginMoving)}
-                    ${field("Individual instruction", instruction, "columbus-plan-instruction")}
+                    ${fields}
                 </div>
             </section>`;
     };
