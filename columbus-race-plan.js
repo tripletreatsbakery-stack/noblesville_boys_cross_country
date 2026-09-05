@@ -71,6 +71,50 @@
         "braune naville"
     ]);
 
+    const anchorAndPackmateOverrides = {
+        "Matthew Moor": ["Tyler Stallings", "John Ensley; Braune Naville; Maddox Denison; Harris Jackson"],
+        "Maddox Denison": ["Tyler Stallings", "John Ensley; Braune Naville; Matthew Moor; Harris Jackson"],
+        "Harris Jackson": ["Matthew Moor", "Maddox Denison; Tyler Stallings; Colin Howard; Jackson Thomas"],
+        "Colin Howard": ["Harris Jackson", "Matthew Moor; Maddox Denison; Jackson Thomas; Tyler Hass"],
+        "Jackson Thomas": ["Colin Howard", "Harris Jackson; Tyler Hass; Will Davidson; Harrison Umthum"],
+        "Tyler Hass": ["Jackson Thomas", "Colin Howard; Graham Yarber; Will Davidson; Harrison Umthum"],
+        "Graham Yarber": ["Tyler Hass", "Jackson Thomas; Zander Gruber; Will Davidson; Harrison Umthum"],
+        "Zander Gruber": ["Tyler Hass", "Graham Yarber; Jackson Thomas; Will Davidson; Harrison Umthum"],
+        "Maddox Uminski": ["Will Davidson", "Zander Gruber; Graham Yarber; Harrison Umthum; Colin Halvorsen"],
+        "Will Davidson": ["Zander Gruber", "Graham Yarber; Tyler Hass; Harrison Umthum; Colin Halvorsen"],
+        "Harrison Umthum": ["Will Davidson", "Zander Gruber; Graham Yarber; Colin Halvorsen; Jayden Gedeon"],
+        "Colin Halvorsen": ["Harrison Umthum", "Will Davidson; Zander Gruber; Jayden Gedeon; Camden Clark"],
+        "Jayden Gedeon": ["Colin Halvorsen", "Harrison Umthum; Will Davidson; Camden Clark; Bryson Cronin-Warren"],
+        "Camden Clark": ["Colin Halvorsen", "Jayden Gedeon; Harrison Umthum; Bryson Cronin-Warren; Eli Ropte"],
+        "Bryson Cronin-Warren": ["Camden Clark", "Jayden Gedeon; Colin Halvorsen; Eli Ropte; Finn Adams"],
+        "Eli Ropte": ["Camden Clark", "Bryson Cronin-Warren; Jayden Gedeon; Finn Adams; Jacob Patlogar"],
+        "Finn Adams": ["Eli Ropte", "Bryson Cronin-Warren; Jayden Gedeon; Jacob Patlogar; Joey McLaughlin"],
+        "Jacob Patlogar": ["Eli Ropte", "Finn Adams; Bryson Cronin-Warren; Joey McLaughlin; Cohen Bullock"],
+        "Joey McLaughlin": ["Jacob Patlogar", "Finn Adams; Eli Ropte; Cohen Bullock; Ben Graham"],
+        "Cohen Bullock": ["Jacob Patlogar", "Joey McLaughlin; Finn Adams; Ben Graham; Preston Burris"],
+        "Ben Graham": ["Cohen Bullock", "Joey McLaughlin; Preston Burris; Dane Stewart; Brady McFall"],
+        "Preston Burris": ["Cohen Bullock", "Ben Graham; Joey McLaughlin; Dane Stewart; Brady McFall"],
+        "Dane Stewart": ["Preston Burris", "Ben Graham; Cohen Bullock; Brady McFall; Wyatt Dumbris"],
+        "Brady McFall": ["Dane Stewart", "Preston Burris; Ben Graham; Wyatt Dumbris; Nolan Hauck"],
+        "Wyatt Dumbris": ["Brady McFall", "Dane Stewart; Preston Burris; Nolan Hauck; Carson Gaskill"],
+        "Nolan Hauck": ["Wyatt Dumbris", "Brady McFall; Dane Stewart; Carson Gaskill; Brayden Clark"],
+        "Carson Gaskill": ["Nolan Hauck", "Wyatt Dumbris; Brady McFall; Brayden Clark; Maddux Whaley"],
+        "Brayden Clark": ["Nolan Hauck", "Carson Gaskill; Wyatt Dumbris; Maddux Whaley; Porter Hahn"],
+        "Maddux Whaley": ["Carson Gaskill", "Brayden Clark; Nolan Hauck; Porter Hahn; Brayden Adams"],
+        "Porter Hahn": ["Carson Gaskill", "Nolan Hauck; Brayden Clark; Maddux Whaley; Brayden Adams"],
+        "Brayden Adams": ["Porter Hahn", "Maddux Whaley; Carson Gaskill; Evan Lassiter; AJ Dumser"],
+        "Evan Lassiter": ["Porter Hahn", "Brayden Adams; Maddux Whaley; AJ Dumser; Andersen Horbett"],
+        "AJ Dumser": ["Evan Lassiter", "Porter Hahn; Brayden Adams; Andersen Horbett; Joey Burks"],
+        "Andersen Horbett": ["AJ Dumser", "Evan Lassiter; Porter Hahn; Joey Burks; Inman Kjeldsen"],
+        "Joey Burks": ["Andersen Horbett", "AJ Dumser; Evan Lassiter; Inman Kjeldsen; Chris Williams"],
+        "Inman Kjeldsen": ["Joey Burks", "Chris Williams; Andersen Horbett"],
+        "Chris Williams": ["Inman Kjeldsen", "Joey Burks; Andersen Horbett"],
+        "Drew Hickner": ["Jayden Gedeon", "Camden Clark; Bryson Cronin-Warren; Eli Ropte; Jacob Patlogar"],
+        "Landry Adams": ["Colin Howard", "Harris Jackson; Jackson Thomas; Tyler Hass; Graham Yarber"],
+        "Lucas Cesar": ["", ""],
+        "Nixon Linger": ["", ""]
+    };
+
     function normalizeName(value) {
         return String(value || "").trim().replace(/\s+/g, " ").toLowerCase();
     }
@@ -85,7 +129,9 @@
         const plan = plans[fullName];
         if (!plan) return "";
 
-        const [anchor, packmates, beginMoving, instruction] = plan;
+        const [originalAnchor, originalPackmates, beginMoving, instruction] = plan;
+        const [anchor, packmates] = anchorAndPackmateOverrides[fullName] ||
+            [originalAnchor, originalPackmates];
         const field = (label, value, className = "") => `
             <div class="columbus-plan-field ${className}">
                 <div class="columbus-plan-label">${label}</div>
