@@ -140,14 +140,6 @@ h2 {
         var(--panel);
 }
 
-.columbus-plan-kicker {
-    color: var(--gold);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
 .columbus-plan-card h3 {
     margin: 5px 0 20px;
 }
@@ -834,4 +826,29 @@ h4 {
 
     }
 
+}
+/* Meet PR comparison: full-width columns, stacked meet cards on phones. */
+.meet-pr-headings, .meet-pr-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: center;
+}
+.meet-pr-headings {
+    padding: 0 16px 12px;
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+.meet-pr-grid { display: grid; gap: 10px; }
+.meet-pr-item { padding: 16px; background: #191919; border: 1px solid #333; border-radius: 10px; }
+.meet-pr-name { font-weight: 700; overflow-wrap: anywhere; }
+.meet-pr-result { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.meet-pr-pace { margin-top: 5px; color: #aaa; font-size: 13px; font-weight: 400; }
+@media (max-width: 600px) {
+    .meet-pr-headings { display: none; }
+    .meet-pr-item { grid-template-columns: 1fr; gap: 14px; }
+    .meet-pr-name { color: var(--gold); padding-bottom: 10px; border-bottom: 1px solid #333; }
+    .meet-pr-result::before { content: attr(data-label); display: block; margin-bottom: 5px; color: #aaa; font-size: 11px; letter-spacing: .06em; }
 }

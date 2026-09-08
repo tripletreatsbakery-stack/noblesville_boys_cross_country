@@ -152,6 +152,135 @@ window.addEventListener("load", function () {
         return `${paceMin}:${paceRemain}/mi`;
     }
 
+    function formatPaceForDistance(timeStr, distanceM) {
+
+        if (!timeStr || !distanceM) return "-";
+
+        const [m, s] = timeStr.split(":");
+
+        const totalSec =
+            parseInt(m) * 60 +
+            parseFloat(s);
+
+        const miles = Number(distanceM) / 1609.344;
+
+        const paceSec =
+            totalSec / miles;
+
+        let paceMin = Math.floor(paceSec / 60);
+        let paceRemain = Math.round(paceSec % 60);
+
+        if (paceRemain === 60) {
+            paceMin++;
+            paceRemain = 0;
+        }
+
+        return `${paceMin}:${String(paceRemain).padStart(2, "0")}/mi`;
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function meetKey(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_+|_+$/g, "");
+    }
+
+    function recurringMeetOrder(row) {
+        const date = row.season_date || row.meet_pr_date;
+        if (!date) return Number.MAX_SAFE_INTEGER;
+
+        const match = String(date).match(/^(?:\d{4})-(\d{2})-(\d{2})/);
+        return match ? Number(match[1]) * 100 + Number(match[2]) : Number.MAX_SAFE_INTEGER;
+    }
+
+    function buildMeetPRHTML(rows, existingMeetRow) {
+        if (!rows.length) {
+            return `<div class="no-data">No 5000m meet PR data available</div>`;
+        }
+
+        const existingOrder = Object.entries(existingMeetRow || {})
+            .filter(([key, value]) => key !== "athlete_id" && key !== "full_name" && value)
+            .map(([key]) => meetKey(key));
+        const orderIndex = new Map(existingOrder.map((key, index) => [key, index]));
+        const selectedRows = existingOrder.length
+            ? rows.filter(row => orderIndex.has(meetKey(row.series_name)))
+            : rows;
+        const orderedRows = [...selectedRows].sort((a, b) => {
+            if (existingOrder.length) {
+                return orderIndex.get(meetKey(a.series_name)) - orderIndex.get(meetKey(b.series_name));
+            }
+            return recurringMeetOrder(a) - recurringMeetOrder(b) ||
+                String(a.series_name || "").localeCompare(String(b.series_name || ""));
+        });
+
+        if (!orderedRows.length) {
+            return `<div class="no-data">No recurring meet PR data available</div>`;
+        }
+
+        const cards = orderedRows.map(row => `
+            <div class="meet-pr-item">
+                <div class="meet-pr-name">${escapeHTML(row.series_name || "Meet")}</div>
+                <div class="meet-pr-result" data-label="MEET PR">
+                    <span>${escapeHTML(row.meet_pr_raw || "—")}</span>
+                    <div class="meet-pr-pace">${row.meet_pr_raw ? formatPaceForDistance(row.meet_pr_raw, row.distance_m) : ""}</div>
+                </div>
+                <div class="meet-pr-result" data-label="THIS SEASON">
+                    <span>${escapeHTML(row.season_raw || "—")}</span>
+                    <div class="meet-pr-pace">${row.season_raw ? formatPaceForDistance(row.season_raw, row.distance_m) : ""}</div>
+                </div>
+            </div>
+        `).join("");
+
+        return `
+            <div class="meet-pr-headings">
+                <span>MEET</span><span>MEET PR</span><span>THIS SEASON</span>
+            </div>
+            <div class="meet-pr-grid">${cards}</div>
+        `;
+    }
+
+    async function loadMeetPRs(athleteId, existingMeetRow, renderToken) {
+        const params = new URLSearchParams({
+            select: "athlete_id,full_name,series_name,distance_m,meet_pr_seconds,meet_pr_raw,meet_pr_date,season_seconds,season_raw,season_date",
+            athlete_id: `eq.${athleteId}`,
+            distance_m: "eq.5000"
+        });
+
+        try {
+            const response = await fetch(base + "v_athlete_meet_pr_season?" + params, { headers, cache: "no-store" });
+            if (!response.ok) throw new Error(`Meet PR query failed (${response.status})`);
+
+            const rows = await response.json();
+            if (!Array.isArray(rows)) throw new Error("Expected meet PR rows");
+            if (renderToken !== athleteRenderToken) return;
+
+            const target = document.getElementById("meetPRContent");
+            if (target) {
+                target.innerHTML = buildMeetPRHTML(
+                    Array.isArray(rows) ? rows : [],
+                    existingMeetRow
+                );
+            }
+        } catch (error) {
+            console.error("Unable to load meet PRs", error);
+            if (renderToken !== athleteRenderToken) return;
+
+            const target = document.getElementById("meetPRContent");
+            if (target) {
+                target.innerHTML = `<div class="no-data meet-pr-error">Meet PRs could not be loaded. Please try selecting the athlete again.</div>`;
+            }
+        }
+    }
+
     function buildYearHTML(row) {
 
         if (!row) return "No data";
@@ -383,7 +512,6 @@ const splits = calculateGoalSplits(minutes, seconds);
 
         const t = getTraining(a.full_name);
 
-        const years = getYearRow(a.full_name);
 
         document.getElementById("athleteData").innerHTML = `
 
@@ -676,54 +804,20 @@ ${buildGoalPaceHTML(prs?.pr_5000_raw)}
 
         </div>
 
-        <div class="card">
-
-            <h3>DEVELOPMENT</h3>
-
-            <div class="course-layout">
-
-                <div>
-
-                    <h4>MEET PRs</h4>
-
-                    <div class="course-grid">
-
-                        ${Object.entries(meetPRs || {})
-                            .filter(([k, v]) =>
-                                k !== "athlete_id" &&
-                                k !== "full_name" &&
-                                v
-                            )
-                            .map(([k, v]) => `
-                                <div class="course-item">
-                                    <label>
-                                        ${k.replace(/_/g, " ")}
-                                    </label>
-                                    <span>${v}</span>
-                                </div>
-                            `)
-                            .join("")}
-
-                    </div>
-
-                </div>
-
-                <div>
-
-                    <h4>YEARLY PRs</h4>
-
-                    ${buildYearHTML(years)}
-
-                </div>
-
+        <section class="card progress-card" aria-labelledby="progress-title">
+            <h3 id="progress-title">PROGRESS</h3>
+            <h4>MEET PRs</h4>
+            <div id="meetPRContent" aria-live="polite">
+                <div class="no-data">Loading meet PRs...</div>
             </div>
-
-        </div>
+        </section>
         `;
+
+        loadMeetPRs(a.athlete_id, meetPRs, renderToken);
 
         // Fetch each selection afresh and ignore responses for previous selections.
         const query = new URLSearchParams({
-            select: "faster_1,faster_2,faster_3,peer_1,peer_2,anchor",
+            select: "faster_1,faster_2,faster_3,peer_1,peer_2,anchor_1,anchor_2",
             ...(a.athlete_id != null
                 ? { athlete_id: "eq." + a.athlete_id }
                 : { full_name: "eq." + a.full_name }),
