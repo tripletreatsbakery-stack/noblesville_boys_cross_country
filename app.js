@@ -13,6 +13,7 @@ window.addEventListener("load", function () {
     let meetData = [];
     let yearData = [];
     let trainingData = [];
+    let athleteRenderToken = 0;
 
     Promise.all([
         fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
@@ -374,6 +375,7 @@ const splits = calculateGoalSplits(minutes, seconds);
     function showAthlete(i) {
 
         const a = physData[i];
+        const renderToken = ++athleteRenderToken;
 
         const prs = getPRs(a.athlete_id);
 
@@ -593,7 +595,7 @@ const splits = calculateGoalSplits(minutes, seconds);
 </div>
 </div>
 ${buildGoalPaceHTML(prs?.pr_5000_raw)}
-${window.buildColumbusRacePlanHTML?.(a.full_name) || ""}
+<div id="columbusRacePlan">${window.buildColumbusRacePlanHTML?.(a.full_name) || ""}</div>
         <div class="card">
 
             <h3>PRs</h3>
@@ -718,6 +720,27 @@ ${window.buildColumbusRacePlanHTML?.(a.full_name) || ""}
 
         </div>
         `;
+
+        // Fetch each selection afresh and ignore responses for previous selections.
+        const query = new URLSearchParams({
+            select: "faster_1,faster_2,faster_3,peer_1,peer_2,anchor",
+            ...(a.athlete_id != null
+                ? { athlete_id: "eq." + a.athlete_id }
+                : { full_name: "eq." + a.full_name }),
+            limit: "1"
+        });
+        fetch(base + "v_athlete_xc_race_neighborhood?" + query, { headers, cache: "no-store" })
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP " + response.status);
+                return response.json();
+            })
+            .then(rows => {
+                if (!Array.isArray(rows)) throw new Error("Expected neighborhood rows");
+                if (renderToken !== athleteRenderToken) return;
+                document.getElementById("columbusRacePlan").innerHTML =
+                    window.buildColumbusRacePlanHTML?.(a.full_name, rows[0]) || "";
+            })
+            .catch(error => console.error("Unable to load race neighborhood for " + a.full_name, error));
 
         document
             .getElementById("goalMinutes")
