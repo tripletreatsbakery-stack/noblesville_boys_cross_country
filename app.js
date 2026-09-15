@@ -14,6 +14,24 @@ window.addEventListener("load", function () {
     let yearData = [];
     let trainingData = [];
     let athleteRenderToken = 0;
+    const lastAthleteStorageKey = "paceright.athlete.lastAthleteId";
+
+    function getSavedAthleteId() {
+        try {
+            return window.localStorage.getItem(lastAthleteStorageKey);
+        } catch (error) {
+            console.warn("Unable to read the saved athlete preference", error);
+            return null;
+        }
+    }
+
+    function saveAthleteId(athleteId) {
+        try {
+            window.localStorage.setItem(lastAthleteStorageKey, String(athleteId));
+        } catch (error) {
+            console.warn("Unable to save the athlete preference", error);
+        }
+    }
 
     Promise.all([
         fetch(base + "v_athlete_physiology", { headers }).then(r => r.json()),
@@ -41,20 +59,40 @@ window.addEventListener("load", function () {
             a.full_name.localeCompare(b.full_name)
         );
 
-        physData.forEach((a, i) => {
+        physData.forEach(a => {
 
             const opt = document.createElement("option");
 
-            opt.value = i;
+            opt.value = String(a.athlete_id);
             opt.textContent = a.full_name;
 
             dropdown.appendChild(opt);
         });
 
-        showAthlete(0);
+        if (!physData.length) {
+            document.getElementById("status").innerText = "No athletes available";
+            dropdown.disabled = true;
+            return;
+        }
+
+        const savedAthleteId = getSavedAthleteId();
+        const savedAthleteIndex = physData.findIndex(
+            athlete => String(athlete.athlete_id) === savedAthleteId
+        );
+        const initialAthleteIndex = savedAthleteIndex >= 0 ? savedAthleteIndex : 0;
+
+        dropdown.value = String(physData[initialAthleteIndex].athlete_id);
+        showAthlete(initialAthleteIndex);
 
         dropdown.addEventListener("change", e => {
-            showAthlete(e.target.value);
+            const athleteIndex = physData.findIndex(
+                athlete => String(athlete.athlete_id) === e.target.value
+            );
+
+            if (athleteIndex < 0) return;
+
+            saveAthleteId(physData[athleteIndex].athlete_id);
+            showAthlete(athleteIndex);
         });
     });
 
